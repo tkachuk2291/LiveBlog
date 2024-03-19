@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.views import generic
+
+from blog.models import Post
 
 
 def index(request):
@@ -15,3 +18,9 @@ def contact_us(request):
 
 def author(request):
     return render(request, 'blog-templates/author.html')
+
+
+class PostListView(generic.ListView):
+    model = Post
+    context_object_name = "post_list"
+    template_name = "blog-templates/posts/post_list.html"
