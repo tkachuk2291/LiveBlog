@@ -2697,6 +2697,7 @@ progress {
   color: #344767;
 }
 
+
 .col-form-label {
   padding-top: calc(0.5rem + 1px);
   padding-bottom: calc(0.5rem + 1px);
@@ -4517,7 +4518,7 @@ fieldset:disabled .btn {
   --bs-nav-link-font-weight: ;
   --bs-nav-link-color: var(--bs-link-color);
   --bs-nav-link-hover-color: var(--bs-link-hover-color);
-  --bs-nav-link-disabled-color: #6c757d;
+  --bs-nav-link-disabled-color: black;
   display: flex;
   flex-wrap: wrap;
   padding-left: 0;
@@ -10555,7 +10556,7 @@ fieldset:disabled .btn {
 }
 
 .text-white{
-  color: #4A392D !important;
+  color: #4A392D;
   background-color: rgba(255, 255, 255, 0.8) !important;
   backdrop-filter: saturate(200%) blur(30px);
   border-radius:0.5rem;
@@ -10563,6 +10564,9 @@ fieldset:disabled .btn {
     -webkit-backdrop-filter: saturate(200%)
 
 
+}
+.text-white.color-post-detail{
+  color:#344767;
 }
 
 .text-body {
@@ -16016,9 +16020,11 @@ fieldset:disabled .btn {
   }
 
   .py-lg-7 {
-    padding-top: 6rem !important;
-    padding-bottom: 6rem !important;
+    padding-top: 4rem;
+    padding-bottom: 6rem
   }
+
+
 
   .py-lg-8 {
     padding-top: 8rem !important;
@@ -24926,6 +24932,9 @@ p {
   background-image: linear-gradient(310deg, #E8D3CD ,#4A392D);
 }
 
+.text-gradient.text-primary {
+  background-image: linear-gradient(310deg, #E8D3CD , black);
+}
 
 .text-gradient.text-info {
   background-image: linear-gradient(310deg, #2152FF, #21D4FD);
@@ -26626,3 +26635,13 @@ pre[class*="language-"] {
 }
 
 /*# sourceMappingURL=kit-free.css.map */
+
+
+
+#custom-background-color{
+  background-color:darkblue;!important;
+}
+
+span.input-group-text {
+    height: auto;
+}
