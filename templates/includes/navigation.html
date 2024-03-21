@@ -46,7 +46,7 @@
               {% if request.user.is_authenticated %}
                 <li class="nav-item ms-lg-auto">
                   <a class="nav-link nav-link-icon me-2"
-                     href="#">
+                     href="{% url "blog:logout" %}">
                     <i class="fa fa-sign-out me-1"></i>
                     <p class="d-inline text-sm z-index-1 font-weight-bold" data-bs-toggle="tooltip"
                        data-bs-placement="bottom" title="Logout">Logout</p>
@@ -54,8 +54,8 @@
                 </li>
               {% else %}
                 <li class="nav-item ms-lg-auto">
-                  <a class="nav-link nav-link-icon me-2"
-                     href="#">
+                  <a  class="nav-link nav-link-icon me-2"
+                     href="{% url "blog:login" %}">
                     <i class="fa fa-sign-in me-1"></i>
                     <p class="d-inline text-sm z-index-1 font-weight-bold" data-bs-toggle="tooltip"
                        data-bs-placement="bottom" title="Login">Login</p>
@@ -75,7 +75,6 @@
           </div>
         </div>
       </nav>
-      <!-- End Navbar -->
     </div>
   </div>
 </div>
