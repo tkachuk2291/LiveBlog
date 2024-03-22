@@ -82,14 +82,8 @@ class PostDetailView(generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context_data = super(PostDetailView, self).get_context_data(**kwargs)
-        try:
-            username = User.objects.first()
-            post = self.get_object()
-            user = User.objects.get(username=username.username)
-            posts = user.owner_posts.all()
-            context_data['posts'] = posts
-            context_data['all_posts'] = posts.exclude(pk=post.pk)
-        except User.DoesNotExist:
-            pass
+        post = self.get_object()
+        author_post = Post.objects.filter(owner=post.owner).exclude(pk=post.pk)
+        context_data['posts'] = author_post
 
         return context_data
