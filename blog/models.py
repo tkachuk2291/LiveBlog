@@ -5,10 +5,10 @@ from taggit.managers import TaggableManager
 
 class Post(models.Model):
     title = models.CharField(max_length=256)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owned_posts")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_posts")
     content = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
-    liked = models.ManyToManyField(User , related_name="liked_posts")
+    liked = models.ManyToManyField(User, related_name="liked_posts")
     tags = TaggableManager()
 
 
@@ -26,6 +26,6 @@ class Like(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_comment")
-    post = models.ForeignKey(Post, on_delete=models.CASCADE , related_name="post_comment")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_comment")
     content = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
