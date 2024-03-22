@@ -38,12 +38,12 @@
                     <span>Followers</span>
                   </div>
                   <div class="col-auto">
-                    <span class="h6">{{ post.deadline }}</span>
+                    <span class="h6">{{ post.created_time }}</span>
                     <span>Data posting</span>
                   </div>
                 </div>
                 <p class="text-lg mb-0">
-                  {{ post.description }} <br><a href="javascript:;" class="text-info icon-move-right">continue read
+                  {{ post.content | truncatewords:60 }} <br><a href={% url "blog:post-detail" post.pk %} javascript: class="text-info icon-move-right">continue read
                   <i class="fas fa-arrow-right text-sm ms-1"></i>
                 </a>
                 </p>
