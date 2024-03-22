@@ -38,7 +38,7 @@ class UserLoginView(LoginView):
 
 def logout_view(request):
     logout(request)
-    return redirect("blog:home-page")
+    return redirect("blog:login")
 
 
 def register(request):
