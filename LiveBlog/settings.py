@@ -45,6 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles', "blog", "taggit"
 ]
 
+
+AUTH_USER_MODEL = "blog.User"
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -126,3 +130,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/home/'
+
