@@ -1,0 +1,106 @@
+{% extends 'layouts/base_sections.html' %}
+{% load static %}
+
+{% block title %} Material Kit 2 by Creative Tim {% endblock title %}
+
+{% block body %} class="blog-author bg-gray-100" {% endblock body %}
+
+
+{% block content %}
+
+  <section class="py-sm-7 py-7 position-relative">
+    {% include 'blog-templates/posts/dropdowns.html' %}
+    <div class="container text-center">
+      <h1 style=" background-color: white; 
+  border-radius: 2em; 
+  padding: 0.5em;">My posts</h1>
+    </div>
+    {% for post in posts %}
+      <div class="container">
+
+
+        <div class="row">
+          <div class="col-12 mx-auto">
+            <div class="row py-lg-7 py-5">
+              <div class="col-lg-3 col-md-5 position-relative my-auto">
+                <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                     src="{% static 'img/bruce-mars.jpg' %}" alt="bruce">
+              </div>
+              <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h4 class="mb-0">{{ post.title }}</h4>
+                  <div class="d-block">
+                    <a href="{% url "blog:user-profile" user_id %}" type="button"
+                       class="btn btn-sm btn-outline-info text-nowrap mb-0">My Profile</a>
+                    <a href="{% url "blog:post-update" post.pk %}" type="button"
+                       class="btn btn-sm btn-outline-warning text-nowrap mb-0">Update Post</a>
+                    <button type="button" class="btn btn-sm btn-outline-danger text-nowrap mb-0"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal-{{ post.pk }}">Delete Post
+                    </button>
+                  </div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-auto">
+                    <span class="h6">323</span>
+                    <span>Posts</span>
+                  </div>
+                  <div class="col-auto">
+                    <span class="h6">3.5k</span>
+                    <span>Followers</span>
+                  </div>
+                  <div class="col-auto">
+                    <span class="h6">{{ post.created_time }}</span>
+                    <span>Data posting</span>
+                  </div>
+                </div>
+                <p class="text-lg mb-0">
+                  {{ post.content | truncatewords:60 }} <br><a href={% url "blog:post-detail" post.pk %} javascript:
+                                                               class="text-info icon-move-right">continue read
+                  <i class="fas fa-arrow-right text-sm ms-1"></i>
+                </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="exampleModal-{{ post.pk }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+           aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to delete the post?</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              The post {{ post.title }} will be deleted, changes will be irreversible.
+            </div>
+            <div class="modal-footer justify-content-between">
+              <a href="{% url 'blog:home-page' %}" class="btn bg-gradient-success" data-bs-dismiss="modal">Close</a>
+
+              <form action="{% url 'blog:post-delete' post.pk %}" method="post">
+                {% csrf_token %}
+                <button class="btn  bg-gradient-danger" type="submit">Delete Confirm</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    {% endfor %}
+    {% include 'includes/pagination.html' %}
+  </section>
+
+  <div class="container py-7">
+    <div class="row mt-3">
+      <div class="col-sm-4 col-6 mx-auto">
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}
+
+

@@ -2,7 +2,8 @@ from django.contrib.auth import logout
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
 from django.core.exceptions import ValidationError
-from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic, View
 from django.contrib import messages
@@ -36,10 +37,32 @@ def author(request):
     return render(request, 'blog-templates/author.html')
 
 
+class UserPostsListView(generic.ListView):
+    model = Post
+    template_name = 'blog-templates/accounts/user_posts.html'
+    context_object_name = 'post_list'
+
+    def get_context_data(self, **kwargs):
+        context_data = super(UserPostsListView, self).get_context_data(**kwargs)
+        user = self.request.user
+        author_posts = Post.objects.filter(owner=user.pk)
+        print("DATA", author_posts)
+        context_data['posts'] = author_posts
+        context_data['user_id'] = user.id
+
+        return context_data
+
+
 class PostListView(generic.ListView):
     model = Post
     context_object_name = "post_list"
     template_name = "blog-templates/posts/post_list.html"
+
+
+class PostDeleteView(generic.DeleteView):
+    model = Post
+    template_name = "blog-templates/accounts/user_posts.html"
+    success_url = reverse_lazy('blog:user-posts')
 
 
 class UserLoginView(LoginView):
@@ -111,12 +134,12 @@ class PostCreateView(generic.CreateView):
         title = request.POST.get('title', None)
         tags = request.POST.get('tags', None)
         content = request.POST.get('content', None)
-        post_v = PostCreateForm(request.POST)
-        if post_v.is_valid():
+        post_form = PostCreateForm(request.POST)
+        if post_form.is_valid():
             Post.objects.get_or_create(title=title, tags=tags, content=content, owner=request.user)
             return redirect("blog:post-list")
         else:
-            return render(request, "blog-templates/posts/post_create.html", {'form': post_v})
+            return render(request, "blog-templates/posts/post_create.html", {'form': post_form})
 
 
 class CustomPasswordChangeDoneView(auth_views.PasswordChangeDoneView):
@@ -151,3 +174,24 @@ class UserProfileUpdateView(generic.UpdateView):
         user.save()
         messages.success(self.request, 'Profile updated successfully')
         return super().form_valid(form)
+
+
+class PostUpdateView(generic.UpdateView):
+    model = Post
+    template_name = "blog-templates/posts/post_update.html"
+    context_object_name = 'post_update'
+    fields = ["title", "content", "tags"]
+    success_url = reverse_lazy("blog:user-posts")
+
+    def post(self, request, *args, **kwargs):
+        post = self.get_object()
+        tags = request.POST.get('tags', None)
+        post_form = PostCreateForm(request.POST, instance=post)
+        if post_form.is_valid():
+            post = post_form.save(commit=False)
+            post.owner = request.user
+            post.save()
+            post.tags.set(tags.split(','))
+            return redirect("blog:post-list")
+        else:
+            return render(request, "blog-templates/posts/post_create.html", {'form': post_form})

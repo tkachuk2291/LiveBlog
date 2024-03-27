@@ -12,11 +12,15 @@ from blog.views import (
     UserPasswordChangeView,
     UserPasswordResetConfirmView,
     logout_view,
-    register, user_profile, UserProfileUpdateView, user_create, PostCreateView
+    register, user_profile, UserProfileUpdateView, user_create, PostCreateView, UserPostsListView, PostDeleteView,
+    PostUpdateView,
 )
 
 urlpatterns = [
+    path('post-update/<int:pk>', PostUpdateView.as_view(), name='post-update'),
     path("home/", index, name="home-page"),
+    path("accounts/user_posts", UserPostsListView.as_view(), name="user-posts"),
+    path("accounts/post-delete/<int:pk>/", PostDeleteView.as_view(), name="post-delete"),
     path("post/create", PostCreateView.as_view(), name="post-create"),
     path('about-us/', about_us, name='about-us'),
     path('contact-us/', contact_us, name='contact-us'),
