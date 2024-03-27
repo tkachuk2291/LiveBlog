@@ -11,6 +11,11 @@
   <!-- START Testimonials w/ user image & text & info -->
   <section class="py-sm-7 py-7 position-relative">
     {% include 'blog-templates/posts/dropdowns.html' %}
+    <div class="container text-center">
+      <h1 style=" background-color: white; 
+      border-radius: 2em; 
+      padding: 0.5em;">Dashboard</h1>
+    </div>
     {% for post in post_list %}
       <div class="container">
 
@@ -43,7 +48,8 @@
                   </div>
                 </div>
                 <p class="text-lg mb-0">
-                  {{ post.content | truncatewords:60 }} <br><a href={% url "blog:post-detail" post.pk %} javascript: class="text-info icon-move-right">continue read
+                  {{ post.content | truncatewords:60 }} <br><a href={% url "blog:post-detail" post.pk %} javascript:
+                                                               class="text-info icon-move-right">continue read
                   <i class="fas fa-arrow-right text-sm ms-1"></i>
                 </a>
                 </p>
