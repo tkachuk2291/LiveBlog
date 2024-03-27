@@ -8439,6 +8439,7 @@ fieldset:disabled .btn {
     position: relative !important;
 }
 
+
 .position-absolute {
     position: absolute !important;
 }
@@ -10749,8 +10750,13 @@ fieldset:disabled .btn {
 
 .rounded-circle,
 .avatar.rounded-circle img {
-    border-radius: 50% !important;
+    border-radius: 50%
 }
+
+.custom-avatar {
+    border-radius: 10%;
+}
+
 
 .rounded-pill {
     border-radius: 50rem !important;
@@ -26643,5 +26649,23 @@ pre[class*="language-"] {
 span.input-group-text {
     height: auto;
 }
+
+.full-width-height-img-container {
+    display: flex; /* Разместить элементы рядом */
+    justify-content: flex-end; /* Выровнять элементы по центру */
+    align-items: center; /* Выровнять элементы по вертикали по центру */
+    height: 80%; /* Для сохранения полной высоты */
+}
+
+.full-width-height-img,
+.col-lg-6 {  /* Применить стили и к картинке, и к блоку */
+    max-width: 100%; /* Задать ширину 50% */
+    height: auto; /* Сохранить соотношение сторон изображения и блока */
+}
+
+.full-width-height-img {
+    object-fit: cover; /* Обрезать изображение по контейнеру */
+}
+
 
 

@@ -12,11 +12,12 @@ from blog.views import (
     UserPasswordChangeView,
     UserPasswordResetConfirmView,
     logout_view,
-    register
+    register, user_profile, UserProfileUpdateView, user_create, PostCreateView
 )
 
 urlpatterns = [
     path("home/", index, name="home-page"),
+    path("post/create", PostCreateView.as_view(), name="post-create"),
     path('about-us/', about_us, name='about-us'),
     path('contact-us/', contact_us, name='contact-us'),
     path('author/', author, name='author'),
@@ -41,7 +42,7 @@ urlpatterns = [
     path('accounts/password -reset-complete/', auth_views.PasswordResetCompleteView.as_view(
         template_name='blog-templates/accounts/password_reset_complete.html'
     ), name='password_reset_complete'),
-
+    path('accounts/user-profile/<int:pk>', UserProfileUpdateView.as_view(), name='user-profile')
 ]
 
 app_name = "blog"
