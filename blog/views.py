@@ -46,7 +46,6 @@ class UserPostsListView(generic.ListView):
         context_data = super(UserPostsListView, self).get_context_data(**kwargs)
         user = self.request.user
         author_posts = Post.objects.filter(owner=user.pk)
-        print("DATA", author_posts)
         context_data['posts'] = author_posts
         context_data['user_id'] = user.id
 
@@ -128,15 +127,18 @@ class PostCreateView(generic.CreateView):
     model = Post
     template_name = "blog-templates/posts/post_create.html"
     context_object_name = "post_create"
-    fields = ["title", "content", "tags"]
+    fields = ["title", "content", "tags", "picture"]
 
     def post(self, request, *args, **kwargs):
-        title = request.POST.get('title', None)
         tags = request.POST.get('tags', None)
-        content = request.POST.get('content', None)
-        post_form = PostCreateForm(request.POST)
+        post_form = PostCreateForm(request.POST, request.FILES)
         if post_form.is_valid():
-            Post.objects.get_or_create(title=title, tags=tags, content=content, owner=request.user)
+            post = post_form.save(commit=False)
+            post.owner = request.user
+            post.picture = post.picture
+            post.save()
+            post.tags.set(tags.split(','))
+
             return redirect("blog:post-list")
         else:
             return render(request, "blog-templates/posts/post_create.html", {'form': post_form})
@@ -158,12 +160,15 @@ class UserProfileUpdateView(generic.UpdateView):
         phone = request.POST.get('phone', None)
         birthday = request.POST.get('birthday', None)
         gender = request.POST.get('gender', None)
+        avatar = request.FILES.get('avatar', None)
         user = self.get_object()
         user.phone = phone
         user.birthday = birthday
         user.gender = gender
         user.first_name = first_name
         user.last_name = last_name
+        if avatar:
+            user.avatar = avatar
         user.save()
         messages.success(self.request, 'Profile updated successfully')
 
@@ -180,16 +185,16 @@ class PostUpdateView(generic.UpdateView):
     model = Post
     template_name = "blog-templates/posts/post_update.html"
     context_object_name = 'post_update'
-    fields = ["title", "content", "tags"]
+    fields = ["title", "content", "tags" , "picture"]
     success_url = reverse_lazy("blog:user-posts")
 
     def post(self, request, *args, **kwargs):
-        post = self.get_object()
         tags = request.POST.get('tags', None)
-        post_form = PostCreateForm(request.POST, instance=post)
+        post_form = PostCreateForm(request.POST, request.FILES)
         if post_form.is_valid():
             post = post_form.save(commit=False)
             post.owner = request.user
+            post.picture = post.picture
             post.save()
             post.tags.set(tags.split(','))
             return redirect("blog:post-list")

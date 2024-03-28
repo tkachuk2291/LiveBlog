@@ -28,9 +28,11 @@
                   <div class="profile-cover rounded-top"
                        data-background="/static/assets/img/profile-cover.jpg"></div>
                   <div class="card-body pb-4">
-                    <img src="{% static 'img/illustrations/test.jpg' %} "
+                    {% if post_update.picture %}
+                    <img src="{{ post_update.picture.url }}"
                          class="user-avatar large-avatar mx-auto  mb-4 custom-avatar"
                          alt="Neil Portrait" style="width: 15em; height:13em; border-radius: 0.75rem !important;">
+                    {% endif %}
                     <h4 class="h3">{{ profile.user.username }}</h4>
                     <h4 class="font-weight-normal">{{ profile.user.get_full_name }}</h4>
                     <h5 class="font-weight-normal">
@@ -44,7 +46,7 @@
                       <label for="avatar" class="icon icon-lg mb-5">
                         <span class="fas fa-paperclip mr-3  fa-3x"></span>
                       </label>
-                      <input id="avatar" name="avatar" type="file" style="display: none;">
+                      <input id="avatar" name="picture" type="file" style="display: none;">
                       <div class="d-md-block text-left">
                         <div class="font-weight-normal text-dark mb-1"></div>
                         <div class="text-gray small"></div>
@@ -66,14 +68,14 @@
                     <div>
                       <label for="title">Title</label>
                       <input name="title" class="form-control" id="title" type="text" placeholder="Enter post title"
-                            value="{{ post_update.title }}" required>
+                             value="{{ post_update.title }}" required>
                     </div>
                   </div>
                   <div class="col-md-6 mb-3">
                     <div>
                       <label for="tags">Tags</label>
-                      <input  name="tags" class="form-control" id="tags" type="text" placeholder="Enter post tags" 
-                           value="{{ post_update.tags }}"  required>
+                      <input name="tags" class="form-control" id="tags" type="text" placeholder="Enter post tags"
+                             value="{{ post_update.tags }}" required>
                     </div>
                   </div>
                 </div>

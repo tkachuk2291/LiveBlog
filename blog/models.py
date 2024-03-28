@@ -13,7 +13,7 @@ class User(AbstractUser):
         (GENDER_FEMALE, _("Female")),
     ]
     birthday = models.DateField(null=True, blank=True)
-    avatar = models.ImageField(upload_to="customers/profiles/avatars/", null=True, blank=True)
+    avatar = models.ImageField(default="11.jpg", null=True, blank=True)
     gender = models.PositiveSmallIntegerField(choices=GENDER_CHOICES, null=True, blank=True)
     phone = models.CharField(max_length=32, null=True, blank=True)
 
@@ -28,6 +28,8 @@ class Post(models.Model):
     content = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
     liked = models.ManyToManyField(User, related_name="liked_posts")
+    picture = models.ImageField(default="post_default_images.jpeg", null=True, blank=True)
+
     tags = TaggableManager()
 
 

@@ -27,10 +27,18 @@
                 <div class="card border-light text-center p-0">
                   <div class="profile-cover rounded-top"
                        data-background="/static/assets/img/profile-cover.jpg"></div>
+
                   <div class="card-body pb-4">
-                    <img src="{% static 'img/illustrations/test.jpg' %} "
-                         class="user-avatar large-avatar mx-auto  mb-4 custom-avatar"
-                         alt="Neil Portrait" style="width: 15em; height:13em; border-radius: 0.75rem !important;">
+                    {% if post_create.picture %}
+                      <img src="{{ post_create.picture.url }} "
+                           class="user-avatar large-avatar mx-auto  mb-4 custom-avatar"
+                           alt="Neil Portrait" style="width: 15em; height:13em; border-radius: 0.75rem !important;">
+                    {% else %}
+                      <img src=" {% static 'img/photo_posts/post_default_images.jpeg' %}"
+                           class="user-avatar large-avatar mx-auto  mb-4 custom-avatar"
+                           alt="Neil Portrait" style="width: 15em; height:13em; border-radius: 0.75rem !important;">
+
+                    {% endif %}
                     <h4 class="h3">{{ profile.user.username }}</h4>
                     <h4 class="font-weight-normal">{{ profile.user.get_full_name }}</h4>
                     <h5 class="font-weight-normal">
@@ -42,9 +50,10 @@
                     <h2 class="h5">Select post photo</h2>
                     <div class="d-flex justify-content-center align-items-center">
                       <label for="avatar" class="icon icon-lg mb-5">
-                        <span class="fas fa-paperclip mr-3  fa-3x"></span>
+                        <span class="fas fa-paperclip mr-5" style="font-size:3em;margin-top: 0.3em;"></span>
+                        <input id="avatar" name="picture" type="file" style="display:none">
                       </label>
-                      <input id="avatar" name="avatar" type="file" style="display: none;">
+
                       <div class="d-md-block text-left">
                         <div class="font-weight-normal text-dark mb-1"></div>
                         <div class="text-gray small"></div>
@@ -94,9 +103,7 @@
       </form>
     </main>
   </div>
+
 {% endblock %}
 
 
-title = models.CharField(max_length=256)
-owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="owner_posts")
-content = models.TextField()

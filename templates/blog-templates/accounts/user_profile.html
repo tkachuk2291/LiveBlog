@@ -17,7 +17,7 @@
                   <div>
                     <label for="first_name">First Name</label>
                     <input name="first_name" class="form-control" id="first_name" type="text"
-                           placeholder="Enter your first name" value="{{user_profile.first_name }}"
+                           placeholder="Enter your first name" value="{{ user_profile.first_name }}"
                            required>
                   </div>
                 </div>
@@ -36,8 +36,10 @@
                   <div class="input-group">
                     <span class="input-group-text"><span class="far fa-calendar-alt"></span></span>
                     <input name="birthday" data-datepicker="" class="form-control" id="birthday"
-                           type="text" placeholder="dd/mm/yyyy" value="{{ user_profile.birthday|date:'m/d/Y'|default:'' }}"
+                           type="text" placeholder="dd/mm/yyyy"
+                           value="{{ user_profile.birthday|date:'m/d/Y'|default:'' }}"
                            required>
+
                   </div>
                 </div>
                 <div class="col-md-6 mb-3">
@@ -80,9 +82,10 @@
                   <div class="profile-cover rounded-top"
                        data-background="/static/assets/img/profile-cover.jpg"></div>
                   <div class="card-body pb-4">
-                    <img src="{% static 'img/illustrations/test.jpg' %} "
-                         class="user-avatar large-avatar rounded-circle mx-auto mt-n4 mb-4"
-                         alt="Neil Portrait" style="width: 20em; height:20em">
+                    <img src="{{ user_profile.avatar.url }}"
+                         class="user-avatar large-avatar rounded-circle mx-auto mt-n4 mb-4" alt="Neil Portrait"
+                         style="width: 20em; height:20em"/>
+
                     <h4 class="h3">{{ profile.user.username }}</h4>
                     <h4 class="font-weight-normal">{{ profile.user.get_full_name }}</h4>
                     <h5 class="font-weight-normal">
@@ -123,3 +126,17 @@
     </main>
   </div>
 {% endblock %}
+
+<<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+<script>
+    $(function () {
+        // Initialize datepicker
+        $("#birthday").datepicker({
+            format: "dd/mm/yyyy", // Date format
+            autoclose: true,      // Close the datepicker when selecting a date
+            todayHighlight: true  // Highlight today's date
+        });
+    });
+</script>

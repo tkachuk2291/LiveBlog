@@ -29,7 +29,7 @@ def form_validation_error(form):
 class PostCreateForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags' ]
+        fields = ['title', 'content', 'tags' , "picture" ]
 
     def clean_title(self):
         title = self.cleaned_data['title']
