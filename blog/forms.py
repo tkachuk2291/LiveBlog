@@ -1,10 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm, SetPasswordForm, \
     PasswordChangeForm, UsernameField
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
-
 from blog.models import Post
+User = get_user_model()
 
 
 class ProfileForm(forms.ModelForm):
@@ -29,7 +29,7 @@ def form_validation_error(form):
 class PostCreateForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags' , "picture" ]
+        fields = ['title', 'content', 'tags', "picture"]
 
     def clean_title(self):
         title = self.cleaned_data['title']
@@ -58,7 +58,6 @@ class PostCreateForm(forms.ModelForm):
             )
 
 
-
 class RegistrationForm(UserCreationForm):
     password1 = forms.CharField(
         label=_("Password"),
@@ -69,10 +68,13 @@ class RegistrationForm(UserCreationForm):
         widget=forms.PasswordInput(
             attrs={'class': 'form-control form-control-lg', 'placeholder': 'Password Confirmation'}),
     )
+    photo = forms.ImageField(label=_("Photo"),
+                             required=False
+                             )
 
     class Meta:
         model = User
-        fields = ('username', 'email',)
+        fields = ('username', 'email','photo')
 
         widgets = {
             'username': forms.TextInput(attrs={

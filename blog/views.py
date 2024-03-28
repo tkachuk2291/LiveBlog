@@ -76,9 +76,15 @@ def logout_view(request):
 
 def register(request):
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)
+        form = RegistrationForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            user = form.save(commit=False)
+
+            photo = request.FILES.get('photo')
+            if photo:
+                user.avatar = photo
+
+            user.save()
             print("Account created successfully!")
             return redirect('/accounts/login')
         else:
@@ -185,7 +191,7 @@ class PostUpdateView(generic.UpdateView):
     model = Post
     template_name = "blog-templates/posts/post_update.html"
     context_object_name = 'post_update'
-    fields = ["title", "content", "tags" , "picture"]
+    fields = ["title", "content", "tags", "picture"]
     success_url = reverse_lazy("blog:user-posts")
 
     def post(self, request, *args, **kwargs):
