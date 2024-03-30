@@ -18,7 +18,7 @@ class User(AbstractUser):
     avatar = models.ImageField(default="11.jpg", null=True, blank=True)
     gender = models.PositiveSmallIntegerField(choices=GENDER_CHOICES, null=True, blank=True)
     phone = models.CharField(max_length=32, null=True, blank=True)
-    slug = AutoSlugField(populate_from="username")
+    slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.username and not self.slug:
@@ -39,6 +39,7 @@ class Post(models.Model):
     slug = AutoSlugField(populate_from="title")
     picture = models.ImageField(default="post_default_images.jpeg", null=True, blank=True)
     tags = TaggableManager()
+
 
 
 LIKE_CHOICE = (

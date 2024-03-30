@@ -64,7 +64,7 @@
               </div>
               <p class="text-lg mb-0">
                 {{ search_post.content | truncatewords:60 }} <br><a
-                  href={% url "blog:post-detail" search_post.slug %} javascript:
+                  href={% url "blog:post-detail" search_post.pk %} javascript:
                   class="text-info icon-move-right">continue read
                 <i class="fas fa-arrow-right text-sm ms-1"></i>
               </a>
@@ -120,7 +120,7 @@
                       </div>
                     </div>
                     <p class="text-lg mb-0">
-                      {{ post.content | truncatewords:60 }} <br><a href={% url "blog:post-detail" post.slug %} javascript:
+                      {{ post.content | truncatewords:60 }} <br><a href={% url "blog:post-detail" post.pk %} javascript:
                                                                    class="text-info icon-move-right">continue read
                       <i class="fas fa-arrow-right text-sm ms-1"></i>
                     </a>

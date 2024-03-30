@@ -127,7 +127,7 @@
                       </div>
 
                       {% if request.user.is_authenticated %}
-                        <a href="{% url "blog:user-profile" slug=request.user.slug %}"
+                        <a href="{% url "blog:user-profile" pk=request.user.pk %}"
                            class="dropdown-item border-radius-md">
                           <span class="ps-3">My Profile</span>
                         </a>

@@ -5,7 +5,6 @@ from django.core.exceptions import ValidationError
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.utils.text import slugify
 from django.views import generic, View
 from django.contrib import messages
 from django.views.generic import ListView
@@ -51,7 +50,7 @@ class UserPostsListView(generic.ListView):
         user = self.request.user
         author_posts = Post.objects.filter(owner=user.pk)
         context_data['posts'] = author_posts
-        context_data['user_slug'] = user.slug
+        context_data['user_id'] = user.pk
 
         return context_data
 
@@ -132,8 +131,8 @@ class PostDetailView(generic.DetailView):
 
         return context_data
 
-    def post(self, request, slug):
-        post_commentary = get_object_or_404(Post, slug=slug)
+    def post(self, request, pk):
+        post_commentary = get_object_or_404(Post, pk=pk)
         date_comment = request.POST.get("created_time_comment")
         content = request.POST.get("content")
         Comment.objects.create(
@@ -142,7 +141,7 @@ class PostDetailView(generic.DetailView):
             content=content,
             created_time_comment=date_comment
         )
-        return HttpResponseRedirect(reverse("blog:post-detail", kwargs={"slug": slug}))
+        return HttpResponseRedirect(reverse("blog:post-detail", kwargs={"pk": pk}))
 
 
 class PostCreateView(generic.CreateView):
@@ -157,7 +156,6 @@ class PostCreateView(generic.CreateView):
         photo = request.FILES.get('photo')
         if post_form.is_valid():
             post = post_form.save(commit=False)
-            post.slug = slugify(post.title)
             post.owner = request.user
             post.picture = post.picture
             post.save()
@@ -195,7 +193,7 @@ class UserProfileUpdateView(generic.UpdateView):
         user.save()
         messages.success(self.request, 'Profile updated successfully')
 
-        return redirect("blog:user-profile", slug=user.slug)
+        return redirect("blog:user-profile", pk=user.pk)
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -211,7 +209,7 @@ class PostUpdateView(generic.UpdateView):
     fields = ["title", "content", "tags", "picture"]
     success_url = reverse_lazy("blog:user-posts")
 
-    def post(self, request, slug):
+    def post(self, request, pk):
         tags = request.POST.get('tags', None)
         post_form = PostCreateForm(request.POST, request.FILES)
         date = request.POST.get("created_time")
@@ -220,8 +218,6 @@ class PostUpdateView(generic.UpdateView):
             post.owner = request.user
             post.picture = post.picture
             post.title = post.title
-            if post.title != post_form.instance.title:
-                post.slug = slugify(post.title)
             post.save()
             post.tags.set(tags.split(','))
             return redirect("blog:post-list")
