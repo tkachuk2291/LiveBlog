@@ -23,16 +23,21 @@
           <div class="col-12 mx-auto">
             <div class="row py-lg-7 py-5">
               <div class="col-lg-3 col-md-5 position-relative my-auto">
-                <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                     src="{{ post.picture.url }}" alt="{{ post.title }}">
+                {% if post.picture %}
+                  <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                       src="{{ post.picture.url }}" alt="{{ post.title }}">
+                {% else %}
+                  <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                       src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="default picture">
+                {% endif %}
               </div>
               <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                   <h4 class="mb-0">{{ post.title }}</h4>
                   <div class="d-block">
-                    <a href="{% url "blog:user-profile" user_id %}" type="button"
+                    <a href="{% url "blog:user-profile" user_slug %}" type="button"
                        class="btn btn-sm btn-outline-info text-nowrap mb-0">My Profile</a>
-                    <a href="{% url "blog:post-update" post.pk %}" type="button"
+                    <a href="{% url "blog:post-update" slug=post.slug %}" type="button"
                        class="btn btn-sm btn-outline-warning text-nowrap mb-0">Update Post</a>
                     <button type="button" class="btn btn-sm btn-outline-danger text-nowrap mb-0"
                             data-bs-toggle="modal" data-bs-target="#exampleModal-{{ post.pk }}">Delete Post
@@ -55,8 +60,9 @@
                   </div>
                 </div>
                 <p class="text-lg mb-0">
-                  {{ post.content | truncatewords:60 }} <br><a href={% url "blog:post-detail" post.pk %} javascript:
-                                                               class="text-info icon-move-right">continue read
+                  {{ post.content | truncatewords:60 }} <br><a
+                    href={% url "blog:post-detail" slug=post.slug %} javascript:
+                    class="text-info icon-move-right">continue read
                   <i class="fas fa-arrow-right text-sm ms-1"></i>
                 </a>
                 </p>
@@ -80,7 +86,7 @@
             <div class="modal-footer justify-content-between">
               <a href="{% url 'blog:home-page' %}" class="btn bg-gradient-success" data-bs-dismiss="modal">Close</a>
 
-              <form action="{% url 'blog:post-delete' post.pk %}" method="post">
+              <form action="{% url 'blog:post-delete' slug=post.slug %}" method="post">
                 {% csrf_token %}
                 <button class="btn  bg-gradient-danger" type="submit">Delete Confirm</button>
               </form>

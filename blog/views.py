@@ -2,14 +2,18 @@ from django.contrib.auth import logout
 from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
 from django.core.exceptions import ValidationError
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.utils.text import slugify
 from django.views import generic, View
 from django.contrib import messages
+from django.views.generic import ListView
+from taggit.models import Tag
+
 from blog.forms import UserLoginForm, UserPasswordResetForm, UserSetPasswordForm, UserPasswordChangeForm, \
     RegistrationForm, ProfileForm, form_validation_error, PostCreateForm
-from blog.models import Post, User
+from blog.models import Post, User, Comment
 from django.contrib.auth import views as auth_views
 
 
@@ -47,7 +51,7 @@ class UserPostsListView(generic.ListView):
         user = self.request.user
         author_posts = Post.objects.filter(owner=user.pk)
         context_data['posts'] = author_posts
-        context_data['user_id'] = user.id
+        context_data['user_slug'] = user.slug
 
         return context_data
 
@@ -128,6 +132,18 @@ class PostDetailView(generic.DetailView):
 
         return context_data
 
+    def post(self, request, slug):
+        post_commentary = get_object_or_404(Post, slug=slug)
+        date_comment = request.POST.get("created_time_comment")
+        content = request.POST.get("content")
+        Comment.objects.create(
+            user=request.user,
+            post=post_commentary,
+            content=content,
+            created_time_comment=date_comment
+        )
+        return HttpResponseRedirect(reverse("blog:post-detail", kwargs={"slug": slug}))
+
 
 class PostCreateView(generic.CreateView):
     model = Post
@@ -138,14 +154,15 @@ class PostCreateView(generic.CreateView):
     def post(self, request, *args, **kwargs):
         tags = request.POST.get('tags', None)
         post_form = PostCreateForm(request.POST, request.FILES)
+        photo = request.FILES.get('photo')
         if post_form.is_valid():
             post = post_form.save(commit=False)
+            post.slug = slugify(post.title)
             post.owner = request.user
             post.picture = post.picture
             post.save()
             post.tags.set(tags.split(','))
-
-            return redirect("blog:post-list")
+            return redirect('blog:post-list')
         else:
             return render(request, "blog-templates/posts/post_create.html", {'form': post_form})
 
@@ -178,7 +195,7 @@ class UserProfileUpdateView(generic.UpdateView):
         user.save()
         messages.success(self.request, 'Profile updated successfully')
 
-        return redirect("blog:user-profile", user.pk)
+        return redirect("blog:user-profile", slug=user.slug)
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -194,15 +211,36 @@ class PostUpdateView(generic.UpdateView):
     fields = ["title", "content", "tags", "picture"]
     success_url = reverse_lazy("blog:user-posts")
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, slug):
         tags = request.POST.get('tags', None)
         post_form = PostCreateForm(request.POST, request.FILES)
+        date = request.POST.get("created_time")
         if post_form.is_valid():
             post = post_form.save(commit=False)
             post.owner = request.user
             post.picture = post.picture
+            post.title = post.title
+            if post.title != post_form.instance.title:
+                post.slug = slugify(post.title)
             post.save()
             post.tags.set(tags.split(','))
             return redirect("blog:post-list")
         else:
             return render(request, "blog-templates/posts/post_create.html", {'form': post_form})
+
+
+class Search_View(ListView):
+    model = Post
+    template_name = "blog-templates/posts/post_list.html"
+    context_object_name = "search_title"
+
+    def get_queryset(self):
+        query = self.request.GET.get('title_contains')
+        if not query:
+            messages.warning(self.request, 'Error! Enter text to search for')
+            return Post.objects.none()
+
+        queryset = Post.objects.filter(title__icontains=query) | Post.objects.filter(owner__username__icontains=query)
+        if not queryset.exists():
+            messages.warning(self.request, 'Error! No posts with that title or owner were found.')
+        return queryset

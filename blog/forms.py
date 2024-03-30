@@ -33,7 +33,7 @@ class PostCreateForm(forms.ModelForm):
 
     def clean_title(self):
         title = self.cleaned_data['title']
-        max_length = 10
+        max_length = 30
         if len(title) > max_length:
             raise forms.ValidationError(
                 f'Title length must not exceed {max_length} characters.'
@@ -51,7 +51,7 @@ class PostCreateForm(forms.ModelForm):
 
     def clean_tags(self):
         tags = self.cleaned_data['tags']
-        max_length = 10
+        max_length = 20
         if len(tags) > max_length:
             raise forms.ValidationError(
                 f'Tags length must not exceed {max_length} characters.'

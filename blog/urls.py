@@ -13,20 +13,20 @@ from blog.views import (
     UserPasswordResetConfirmView,
     logout_view,
     register, user_profile, UserProfileUpdateView, user_create, PostCreateView, UserPostsListView, PostDeleteView,
-    PostUpdateView,
+    PostUpdateView,Search_View
 )
 
 urlpatterns = [
-    path('post-update/<int:pk>', PostUpdateView.as_view(), name='post-update'),
+    path('post-update/<slug:slug>', PostUpdateView.as_view(), name='post-update'),
     path("home/", index, name="home-page"),
     path("accounts/user_posts", UserPostsListView.as_view(), name="user-posts"),
-    path("accounts/post-delete/<int:pk>/", PostDeleteView.as_view(), name="post-delete"),
+    path("accounts/post-delete/<slug:slug>/", PostDeleteView.as_view(), name="post-delete"),
     path("post/create", PostCreateView.as_view(), name="post-create"),
     path('about-us/', about_us, name='about-us'),
     path('contact-us/', contact_us, name='contact-us'),
     path('author/', author, name='author'),
     path("posts/", PostListView.as_view(), name="post-list"),
-    path("post/<int:pk>/", PostDetailView.as_view(), name="post-detail"),
+    path("post/<slug:slug>/", PostDetailView.as_view(), name="post-detail"),
     path("accounts/login/", UserLoginView.as_view(), name="login"),
     path("accounts/logout/", logout_view, name="logout"),
     path('accounts/password-change/', UserPasswordChangeView.as_view(), name='password_change'),
@@ -46,7 +46,8 @@ urlpatterns = [
     path('accounts/password -reset-complete/', auth_views.PasswordResetCompleteView.as_view(
         template_name='blog-templates/accounts/password_reset_complete.html'
     ), name='password_reset_complete'),
-    path('accounts/user-profile/<int:pk>', UserProfileUpdateView.as_view(), name='user-profile')
+    path('accounts/user-profile/<slug:slug>', UserProfileUpdateView.as_view(), name='user-profile'),
+    path("search_blogs/", Search_View.as_view(), name='search_blog')
 ]
 
 app_name = "blog"

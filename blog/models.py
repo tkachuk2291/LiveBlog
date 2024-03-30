@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.text import slugify
 from taggit.managers import TaggableManager
 from django.utils.translation import gettext as _
 from django.templatetags.static import static
+from autoslug import AutoSlugField
 
 
 class User(AbstractUser):
@@ -16,6 +18,12 @@ class User(AbstractUser):
     avatar = models.ImageField(default="11.jpg", null=True, blank=True)
     gender = models.PositiveSmallIntegerField(choices=GENDER_CHOICES, null=True, blank=True)
     phone = models.CharField(max_length=32, null=True, blank=True)
+    slug = AutoSlugField(populate_from="username")
+
+    def save(self, *args, **kwargs):
+        if self.username and not self.slug:
+            self.slug = slugify(self.username)
+        super(User, self).save(*args, **kwargs)
 
     @property
     def get_avatar(self):
@@ -28,8 +36,8 @@ class Post(models.Model):
     content = models.TextField()
     created_time = models.DateTimeField(auto_now_add=True)
     liked = models.ManyToManyField(User, related_name="liked_posts")
+    slug = AutoSlugField(populate_from="title")
     picture = models.ImageField(default="post_default_images.jpeg", null=True, blank=True)
-
     tags = TaggableManager()
 
 
@@ -49,4 +57,4 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_comment")
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_comment")
     content = models.TextField()
-    created_time = models.DateTimeField(auto_now_add=True)
+    created_time_comment = models.DateTimeField(auto_now_add=True)
