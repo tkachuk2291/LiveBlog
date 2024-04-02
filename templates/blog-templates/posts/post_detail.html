@@ -6,6 +6,7 @@
 {% endblock header %}
 
 {% block content %}
+  {% load hitcount_tags %}
   <!-- START Testimonials w/ user image & text & info -->
   <section class="py-sm-7 py-5 position-relative">
     <div class="container">
@@ -21,9 +22,9 @@
                      src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="bruce">
               {% endif %}
             </div>
-            <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <h4 class="mb-0">{{ post_detail.title }}</h4>
+            <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 text-center">
+              <div class="d-flex justify-content-between align-items-center mb-2 text-center">
+                <h4 class="mb-0 text-center">{{ post_detail.title }}</h4>
                 <div class="d-block">
                   <form class="d-flex" action="{% url "blog:like-post" %}" method="post">
                     {% csrf_token %}
@@ -42,8 +43,8 @@
               </div>
               <div class="row mb-4 d-flex">
                 <div class="col-auto d-flex">
-                  <span class="h6">323</span>
-                  <span>Posts</span>
+                  <span class="h6"> <b>{% get_hit_count for post_detail %}</b></span>
+                  <span><h5 class="ml-1">👁️</h5></span>
                 </div>
                 <div class="col-auto p-0">
                   <form action="{% url "blog:like-post" %}" method="post">
@@ -52,7 +53,7 @@
                 </div>
                 <div class="col-auto">
                   <span class="h6">{{ post_detail.liked.all.count }}️</span>
-                  <span>Likes</span>
+                  <span>❤️‍🔥</span>
                 </div>
                 <div class="col-auto">
                   <span class="h6">{{ post_detail.created_time }}</span>
@@ -178,11 +179,31 @@
                      alt="{{ post.title }}">
               </a>
             </div>
+
             <div class="card-body px-0">
               <h5>
                 <a href="{% url 'blog:post-detail' pk=post.pk %}"
-                   class="text-dark font-weight-bold">{{ post.title }}</a>
+                   class="text-dark font-weight-bold">{{ post_detail.title }}</a>
               </h5>
+              <div class="row mb-4 d-flex">
+                <div class="col-auto d-flex text-center">
+                  <span class="h6 justify-content-center"> <b>{% get_hit_count for post_detail %}</b></span>
+                  <span><h5 class="ml-1">👁️</h5></span>
+                </div>
+                <div class="col-auto p-0">
+                  <form action="{% url "blog:like-post" %}" method="post">
+                    <input type="hidden" name="post_id" value="{{ post_detail.id }}">
+                  </form>
+                </div>
+                <div class="col-auto">
+                  <span class="h6">{{ post_detail.liked.all.count }}️</span>
+                  <span>❤️‍🔥</span>
+                </div>
+                <div class="col-auto">
+                  <span class="h6">Posted </span>
+                  <span> {{ post_detail.created_time }}</span>
+                </div>
+              </div>
               <p>{{ post.content | truncatewords:30 }}</p>
               <a href="{% url 'blog:post-detail' pk=post.pk %}" class="text-info icon-move-right">Read More <i
                   class="fas fa-arrow-right text-sm"></i></a>
@@ -192,7 +213,6 @@
       {% endfor %}
     </div>
   </div>
-
 {% endblock content %}
 
 

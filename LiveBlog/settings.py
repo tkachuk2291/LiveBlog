@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', "blog", "taggit", "django_htmx",
+    'django.contrib.staticfiles', "blog", "taggit", "hitcount"
 ]
 
 AUTH_USER_MODEL = "blog.User"

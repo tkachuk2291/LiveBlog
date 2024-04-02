@@ -5,6 +5,8 @@ from taggit.managers import TaggableManager
 from django.utils.translation import gettext as _
 from django.templatetags.static import static
 from autoslug import AutoSlugField
+from hitcount.models import HitCountMixin, HitCount
+from django.contrib.contenttypes.fields import GenericRelation
 
 
 class User(AbstractUser):
@@ -43,7 +45,8 @@ class Post(models.Model):
     slug = AutoSlugField(populate_from="title")
     picture = models.ImageField(default="post_default_images.jpeg", null=True, blank=True)
     tags = TaggableManager()
-    views = models.PositiveIntegerField(default=0)
+    hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk',
+                                        related_query_name='hit_count_generic_relation')
 
     @property
     def num_likes(self):

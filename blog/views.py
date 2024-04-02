@@ -3,12 +3,14 @@ from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.db.models import Sum
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views import generic, View
 from django.contrib import messages
 from django.views.generic import ListView
+from hitcount.views import HitCountDetailView
 from taggit.models import Tag
 from django.http import JsonResponse
 from blog.forms import UserLoginForm, UserPasswordResetForm, UserSetPasswordForm, UserPasswordChangeForm, \
@@ -20,12 +22,11 @@ from django.contrib.auth import views as auth_views
 def index(request):
     num_post = Post.objects.all().count()
     num_likes = Like.objects.all().count()
-
-
+    num_views = Post.objects.aggregate(total_views=Sum('hit_count_generic__hits'))['total_views']
     context = {
         'num_post': num_post,
         'num_likes': num_likes,
-        # 'total_views': total_views  # Передаем общее количество просмотров всех постов в контекст
+        'num_views': num_views
     }
     return render(request, 'blog-templates/index.html', context)
 
@@ -167,10 +168,11 @@ class UserPasswordChangeView(PasswordChangeView):
     success_url = reverse_lazy('blog:login')
 
 
-class PostDetailView(generic.DetailView):
+class PostDetailView(HitCountDetailView):
     model = Post
     template_name = "blog-templates/posts/post_detail.html"
     context_object_name = "post_detail"
+    count_hit = True
 
     def get_context_data(self, **kwargs):
         context_data = super(PostDetailView, self).get_context_data(**kwargs)
@@ -183,6 +185,9 @@ class PostDetailView(generic.DetailView):
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         context_data['page_obj'] = page_obj
+        context_data.update({
+            'popular_posts': Post.objects.order_by('-hit_count_generic__hits')[:3],
+        })
         print(context_data)
         return context_data
 

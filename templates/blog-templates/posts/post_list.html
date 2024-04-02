@@ -9,6 +9,7 @@
 
 
 {% block content %}
+  {% load hitcount_tags %}
   {% if messages %}
     <ul class="messages">
       <h1 style="margin-top: 3em; text-align: center;">Search Results</h1>
@@ -85,6 +86,7 @@
           padding: 0.5em;">Dashboard</h1>
           {% include 'blog-templates/posts/dropdowns.html' %}
         </div>
+       
         <div class="container align-items-center" id="postContainer">
           {% for post in post_list %}
             <div class="container">
@@ -123,8 +125,8 @@
                       </div>
                       <div class="row mb-4 d-flex">
                         <div class="col-auto d-flex">
-                          <span class="h6">323</span>
-                          <span>Posts</span>
+                          <span class="h6"> <b>{% get_hit_count for post %}</b></span>
+                          <span><h5 class="ml-1">👁️</h5></span>
                         </div>
                         <div class="col-auto p-0">
                           <form action="{% url "blog:like-post" %}" method="post">
@@ -133,7 +135,7 @@
                         </div>
                         <div class="col-auto">
                           <span class="h6">{{ post.liked.all.count }}️</span>
-                          <span>Likes</span>
+                          <span>❤️‍🔥</span>
                         </div>
                         <div class="col-auto">
                           <span class="h6">{{ post.created_time }}</span>
@@ -164,8 +166,6 @@
       </div>
     {% endif %}
   {% endif %}
-
-
 
 {% endblock content %}
 
