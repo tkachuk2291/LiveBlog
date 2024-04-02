@@ -13,7 +13,7 @@
     <ul class="messages">
       <h1 style="margin-top: 3em; text-align: center;">Search Results</h1>
       {% for message in messages %}
-        <div class="container" style="margin-top: 2em">
+        <div class="container" style="margin-top: 2em;">
           <div class="alert alert-danger text-white font-weight-bold" role="alert">
             <h5 style="color: white;text-align: center"> {{ message }}</h5>
           </div>
@@ -22,7 +22,7 @@
       {% endfor %}
     </ul>
   {% endif %}
-  
+
   {% if search_title %}
 
     <h1 style="margin-top: 3em; text-align: center;">Search Results</h1>
@@ -75,64 +75,101 @@
       </div>
     {% endfor %}
   {% endif %}
-    {% if not search_title and not messages %}
+  {% if not search_title and not messages %}
+    {% if post_list != None %}
       <section class="py-sm-7 py-7 position-relative">
-        {% include 'blog-templates/posts/dropdowns.html' %}
-        <div class="container text-center">
+
+        <div class="container text-center mb-5">
           <h1 style=" background-color: white;
-        border-radius: 2em;
-        padding: 0.5em;">Dashboard</h1>
+          border-radius: 2em;
+          padding: 0.5em;">Dashboard</h1>
+          {% include 'blog-templates/posts/dropdowns.html' %}
         </div>
-        {% for post in post_list %}
-          <div class="container">
-            <div class="row">
-              <div class="col-12 mx-auto">
-                <div class="row py-lg-7 py-5">
-                  <div class="col-lg-3 col-md-5 position-relative my-auto">
-                    {% if post.picture %}
-                      <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                           src="{{ post.picture.url }}" alt="bruce">
-                    {% else %}
-                      <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                           src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="bruce">
-                    {% endif %}
-  
-                  </div>
-                  <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <h4 class="mb-0">{{ post.title }}</h4>
-                      <div class="d-block">
-                        <button type="button" class="btn btn-sm btn-outline-info text-nowrap mb-0">Author profile</button>
-                      </div>
+        <div class="container align-items-center" id="postContainer">
+          {% for post in post_list %}
+            <div class="container">
+              <div class="row">
+                <div class="col-12 mx-auto">
+                  <div class="row py-lg-7 py-5">
+                    <div class="col-lg-3 col-md-5 position-relative my-auto">
+                      {% if post.picture %}
+                        <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                             src="{{ post.picture.url }}" alt="bruce">
+                      {% else %}
+                        <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                             src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="bruce">
+                      {% endif %}
                     </div>
-                    <div class="row mb-4">
-                      <div class="col-auto">
-                        <span class="h6">323</span>
-                        <span>Posts</span>
+                    <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
+                      <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="mb-0">{{ post.title }}</h4>
+                        <div class="d-block">
+
+                          <form class="d-flex" action="{% url "blog:like-post" %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                            {% if user not in post.liked.all %}
+
+                              <button value="🤍" type="submit"
+                                      style=" background-color: transparent;border: none;cursor: pointer;">🤍️
+                              </button>
+                            {% else %}
+                              <button value="❤️" type="submit"
+                                      style=" background-color: transparent;border: none;cursor: pointer;">❤️
+                              </button>
+                            {% endif %}
+                          </form>
+                        </div>
                       </div>
-                      <div class="col-auto">
-                        <span class="h6">3.5k</span>
-                        <span>Followers</span>
+                      <div class="row mb-4 d-flex">
+                        <div class="col-auto d-flex">
+                          <span class="h6">323</span>
+                          <span>Posts</span>
+                        </div>
+                        <div class="col-auto p-0">
+                          <form action="{% url "blog:like-post" %}" method="post">
+                            <input type="hidden" name="post_id" value="{{ post.id }}">
+                          </form>
+                        </div>
+                        <div class="col-auto">
+                          <span class="h6">{{ post.liked.all.count }}️</span>
+                          <span>Likes</span>
+                        </div>
+                        <div class="col-auto">
+                          <span class="h6">{{ post.created_time }}</span>
+                          <span>Data posting</span>
+                        </div>
                       </div>
-                      <div class="col-auto">
-                        <span class="h6">{{ post.created_time }}</span>
-                        <span>Data posting</span>
-                      </div>
+                      <p class="text-lg mb-0">
+                        {{ post.content | truncatewords:60 }} <br><a
+                          href={% url "blog:post-detail" post.pk %} javascript:
+                          class="text-info icon-move-right">continue read
+                        <i class="fas fa-arrow-right text-sm ms-1"></i>
+                      </a>
+                      </p>
                     </div>
-                    <p class="text-lg mb-0">
-                      {{ post.content | truncatewords:60 }} <br><a href={% url "blog:post-detail" post.pk %} javascript:
-                                                                   class="text-info icon-move-right">continue read
-                      <i class="fas fa-arrow-right text-sm ms-1"></i>
-                    </a>
-                    </p>
                   </div>
+
                 </div>
-  
               </div>
             </div>
-          </div>
-        {% endfor %}
-        {% include 'includes/pagination.html' %}
+          {% endfor %}
+          {% include 'includes/pagination.html' %}
       </section>
+    {% else %}
+      <div class="container mt-10"
+           style="background: cadetblue; width: 50%; margin: 2em auto; padding-bottom: 2em; padding-top: 2em; text-align: center;">
+        <h3 style="color: white;">Create first Post!</h3>
+        <a href="{% url 'blog:post-create' %}" class="btn btn-outline-success text-white">Create Post</a>
+      </div>
+    {% endif %}
   {% endif %}
+
+
+
 {% endblock content %}
+
+{#{% block javascripts %}#}
+{#  <script type="text/javascript" src="{% static 'js/voto.js' %}"></script>#}
+{##}
+{#{% endblock javascripts %}#}

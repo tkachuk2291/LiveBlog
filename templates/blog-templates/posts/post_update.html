@@ -29,9 +29,9 @@
                        data-background="/static/assets/img/profile-cover.jpg"></div>
                   <div class="card-body pb-4">
                     {% if post_update.picture %}
-                    <img src="{{ post_update.picture.url }}"
-                         class="user-avatar large-avatar mx-auto  mb-4 custom-avatar"
-                         alt="Neil Portrait" style="width: 15em; height:13em; border-radius: 0.75rem !important;">
+                      <img src="{{ post_update.picture.url }}"
+                           class="user-avatar large-avatar mx-auto  mb-4 custom-avatar"
+                           alt="Neil Portrait" style="width: 15em; height:13em; border-radius: 0.75rem !important;">
                     {% endif %}
                     <h4 class="h3">{{ profile.user.username }}</h4>
                     <h4 class="font-weight-normal">{{ profile.user.get_full_name }}</h4>
@@ -64,29 +64,22 @@
               <h2 class="h5 mb-4 text-center">Post Update</h2>
               <div class="row align-items-center">
                 <div class="row">
-                  <div class="col-md-6 mb-3">
-                    <div>
+                  <div class="col-md-6 mb-3 w-100">
+                    <div class="text-center">
                       <label for="title">Title</label>
-                      <input name="title" class="form-control" id="title" type="text" placeholder="Enter post title"
+                      <input name="title" class="form-control text-center" id="title" type="text" placeholder="Enter post title"
                              value="{{ post_update.title }}" required>
                     </div>
                   </div>
-                  <div class="col-md-6 mb-3">
-                    <div>
-                      <label for="tags">Tags</label>
-                      <input name="tags" class="form-control" id="tags" type="text" placeholder="Enter post tags"
-                             value="{{ post_update.tags }}" required>
-                    </div>
-                  </div>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 text-center">
                   <label for="content">Content</label>
-                  <textarea name="content" class="form-control" id="content" rows="6"
+                  <textarea name="content" class="form-control text-center" id="content" rows="6"
                             placeholder="Write your post content here" required>{{ post_update.content }}</textarea>
                 </div>
 
               </div>
-              <div class="mt-3">
+              <div class="mt-3 text-center">
                 <button type="submit" class="btn btn-primary">Post Update</button>
               </div>
             </div>

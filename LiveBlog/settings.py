@@ -31,7 +31,7 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "tkacuk2291@ukr.net"
 EMAIL_HOST_PASSWORD = "Or7yQhEVXsZ2zETa"
 DEFAULT_FROM_EMAIL = "tkacuk2291@ukr.net"
-
+DATE_INPUT_FORMATS = ['d.m.Y']
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', "blog", "taggit"
+    'django.contrib.staticfiles', "blog", "taggit", "django_htmx",
 ]
 
 AUTH_USER_MODEL = "blog.User"
@@ -55,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_htmx.middleware.HtmxMiddleware",
 ]
 
 ROOT_URLCONF = 'LiveBlog.urls'
@@ -112,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
 
@@ -125,7 +126,6 @@ STATIC_URL = 'static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

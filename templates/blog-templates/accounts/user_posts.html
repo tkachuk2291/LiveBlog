@@ -15,8 +15,8 @@
   border-radius: 2em; 
   padding: 0.5em;">My posts</h1>
     </div>
-    {% if posts %}
-      {% for post in posts %}
+    {% if post_list %}
+      {% for post in post_list %}
         <div class="container">
           <div class="row">
             <div class="col-12 mx-auto">
@@ -60,7 +60,7 @@
                   </div>
                   <p class="text-lg mb-0">
                     {{ post.content | truncatewords:60 }} <br><a
-                      href={% url "blog:post-detail" slug=post.slug %} javascript:
+                      href={% url "blog:post-detail" pk=post.pk %} javascript:
                       class="text-info icon-move-right">continue read
                     <i class="fas fa-arrow-right text-sm ms-1"></i>
                   </a>
@@ -110,7 +110,6 @@
         <h3 style="color: white;">Create first Post!</h3>
         <a href="{% url 'blog:post-create' %}" class="btn btn-outline-success text-white">Create Post</a>
       </div>
-
     {% endif %}
 
 {% endblock content %}

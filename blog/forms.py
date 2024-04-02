@@ -29,7 +29,7 @@ def form_validation_error(form):
 class PostCreateForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags', "picture"]
+        fields = ['title', 'content', "picture"]
 
     def clean_title(self):
         title = self.cleaned_data['title']
@@ -48,14 +48,6 @@ class PostCreateForm(forms.ModelForm):
                 f'Content length must not exceed {max_length} characters.'
             )
         return content
-
-    def clean_tags(self):
-        tags = self.cleaned_data['tags']
-        max_length = 20
-        if len(tags) > max_length:
-            raise forms.ValidationError(
-                f'Tags length must not exceed {max_length} characters.'
-            )
 
 
 class RegistrationForm(UserCreationForm):

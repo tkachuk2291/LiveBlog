@@ -26658,7 +26658,7 @@ span.input-group-text {
 }
 
 .full-width-height-img,
-.col-lg-6 {  /* Применить стили и к картинке, и к блоку */
+.col-lg-6 { /* Применить стили и к картинке, и к блоку */
     max-width: 100%; /* Задать ширину 50% */
     height: auto; /* Сохранить соотношение сторон изображения и блока */
 }
@@ -26668,4 +26668,10 @@ span.input-group-text {
 }
 
 
+.not-visible {
+    display: none;
+}
 
+.row{
+    width: 100%;
+}
