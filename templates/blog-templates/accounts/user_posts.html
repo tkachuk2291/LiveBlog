@@ -110,7 +110,7 @@
       <div class="container"
            style="background: cadetblue; width: 50%; margin: 2em auto; padding-bottom: 2em; padding-top: 2em; text-align: center;">
         <h3 style="color: white;">Create first Post!</h3>
-        <a href="{% url 'blog:post-create' %}" class="btn btn-outline-success text-white">Create Post</a>
+        <a href="{% url 'blog:post-create' %}?from_user_first_posts=true" class="btn btn-outline-success text-white">Create Post</a>
       </div>
     {% endif %}
 

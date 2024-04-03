@@ -1,20 +1,16 @@
 from django.contrib.auth import logout
-from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
-from django.core.exceptions import ValidationError
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.paginator import Paginator
 from django.db.models import Sum
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views import generic, View
+from django.views import generic
 from django.contrib import messages
 from django.views.generic import ListView
 from hitcount.views import HitCountDetailView
-from taggit.models import Tag
-from django.http import JsonResponse
 from blog.forms import UserLoginForm, UserPasswordResetForm, UserSetPasswordForm, UserPasswordChangeForm, \
-    RegistrationForm, ProfileForm, form_validation_error, PostCreateForm
+    RegistrationForm, ProfileForm, PostCreateForm
 from blog.models import Post, User, Comment, Like
 from django.contrib.auth import views as auth_views
 
@@ -29,30 +25,6 @@ def home_view(request):
         'num_views': num_views
     }
     return render(request, 'blog-templates/home/home.html', context)
-
-
-# def home_view(request):
-#     return render(request, 'blog-templates/posts/post_list.html')
-
-
-def user_create(request):
-    return render(request, 'blog-templates/posts/post_create.html')
-
-
-def about_us(request):
-    return render(request, 'blog-templates/about-us.html')
-
-
-def user_profile(request):
-    return render(request, 'blog-templates/accounts/user_profile.html')
-
-
-def contact_us(request):
-    return render(request, 'blog-templates/contact-us.html')
-
-
-def author(request):
-    return render(request, 'blog-templates/author.html')
 
 
 class UserPostsListView(generic.ListView):
@@ -82,33 +54,6 @@ class PostListView(generic.ListView):
         user = self.request.user
         context_data['user'] = user
         return context_data
-
-
-class PostdublicateListView(generic.ListView):
-    model = Post
-    context_object_name = "post_list"
-    template_name = "blog-templates/posts/post_list_dublicate.html"
-    paginate_by = 5
-
-    def get_context_data(self, **kwargs):
-        context_data = super(PostdublicateListView, self).get_context_data(**kwargs)
-        user = self.request.user
-        context_data['user'] = user
-        return context_data
-
-    # class PostListViewJs(generic.ListView):
-    #     model = Post
-    #     context_object_name = "post_list"
-    #     template_name = "blog-templates/posts/post_list_dublicate.html"
-
-    # def get(self, *args, **kwargs):
-    #     print(kwargs)
-    #     upper = kwargs.get("num_posts")
-    #     lower = upper - 3
-    #     posts = list(Post.objects.values()[lower:upper])
-    #     posts_size = len(Post.objects.all())
-    #     size = True if upper >= posts_size else False
-    #     return JsonResponse({"data": posts, "max": size}, safe=False)
 
 
 class PostDeleteView(generic.DeleteView):
@@ -188,7 +133,6 @@ class PostDetailView(HitCountDetailView):
         context_data.update({
             'popular_posts': Post.objects.order_by('-hit_count_generic__hits')[:3],
         })
-        print(context_data)
         return context_data
 
     def post(self, request, pk):
@@ -225,7 +169,6 @@ def like_post(request):
         like.save()
     redirect_to = request.META.get('HTTP_REFERER', 'blog:post-list')
 
-    # Выполняем редирект
     return redirect(redirect_to)
 
 
@@ -242,7 +185,10 @@ class PostCreateView(generic.CreateView):
             post.owner = request.user
             post.picture = post.picture
             post.save()
-            return redirect('blog:post-list')
+            if 'from_user_first_posts' in request.GET:
+                return redirect("blog:user-posts")
+            else:
+                return redirect('blog:post-list')
         else:
             return render(request, "blog-templates/posts/post_create.html", {'form': post_form})
 
