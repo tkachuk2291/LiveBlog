@@ -17,7 +17,7 @@ class User(AbstractUser):
         (GENDER_FEMALE, _("Female")),
     ]
     birthday = models.DateField(null=True, blank=True)
-    avatar = models.ImageField(default="11.jpg", null=True, blank=True)
+    avatar = models.ImageField(default="default_user_logged_in.png", null=True, blank=True)
     gender = models.PositiveSmallIntegerField(choices=GENDER_CHOICES, null=True, blank=True)
     phone = models.CharField(max_length=32, null=True, blank=True)
     slug = models.SlugField(unique=True, blank=True)
@@ -29,7 +29,7 @@ class User(AbstractUser):
 
     @property
     def get_avatar(self):
-        return self.avatar.url if self.avatar else static('static/img/illustrations/pp.jpg')
+        return self.avatar.url if self.avatar else static('static/img/photo_accounts/default_user_logged_in.png')
 
     @property
     def format_birthday(self):

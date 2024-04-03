@@ -39,8 +39,9 @@
                       <div class="col-lg-6 mx-auto col-md-8 col-sm-5 w-100">
                         <div class="input-group">
                           <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                          <input value="{{ user_profile.birthday }}" class="form-control datepicker"
-                                 placeholder="Please select date" type="text" name="birthday">
+                          <input  class="form-control datepicker"
+                                value="{{ user_profile.format_birthday }}" placeholder="Please select date" type="text" name="birthday">
+
                         </div>
                       </div>
                     </div>
@@ -56,8 +57,8 @@
                                 // Проходимся по каждому элементу и инициализируем flatpickr с заданной датой
                                 datepickerElements.forEach(function (element) {
                                     flatpickr(element, {
-                                        dateFormat: "Y-m-d", // Формат даты
-                                        defaultDate: birthday, // Устанавливаем значение даты из профиля пользователя по умолчанию
+                                        dateFormat: "j/F/Y", // Формат даты
+                                        // Устанавливаем значение даты из профиля пользователя по умолчанию
                                     });
                                 });
                             }
@@ -153,17 +154,4 @@
 {% endblock %}
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
-
-<script>
-    $(function () {
-        // Initialize datepicker
-        $("#birthday").datepicker({
-            format: "dd/mm/yyyy", // Date format
-            autoclose: true,      // Close the datepicker when selecting a date
-            todayHighlight: true  // Highlight today's date
-        });
-    });
-</script>

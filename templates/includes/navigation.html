@@ -249,12 +249,12 @@
               {% else %}
                 <div class="nav-link ps-2 d-flex justify-content-between cursor-pointer align-items-center">
                 <div class="custom-avatar">
-                  <a href="javascript:;" class="avatar avatar-sm rounded-circle">
+                  <a href="{% url 'blog:login' %}" class="avatar avatar-sm rounded-circle">
                     <img alt="Image placeholder"
-                         src="{{ user_profile.avatar.url }}" style="width: 3em; height: 3em;">
+                         src="{% static 'img/photo_accounts/user_profile_anonymous.png' %}" style="width: 3em; height: 3em;">
                   </a>
                 </div>
-
+              
 
               {% endif %}
               <div class="nav-item my-auto ms-3 ms-lg-0">

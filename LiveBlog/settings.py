@@ -31,7 +31,8 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = "tkacuk2291@ukr.net"
 EMAIL_HOST_PASSWORD = "Or7yQhEVXsZ2zETa"
 DEFAULT_FROM_EMAIL = "tkacuk2291@ukr.net"
-DATE_INPUT_FORMATS = ['d.m.Y']
+DATE_INPUT_FORMATS = ["%d.%m.%Y", "%d-%m-%Y"]
+
 ALLOWED_HOSTS = []
 
 # Application definition

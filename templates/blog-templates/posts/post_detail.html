@@ -52,12 +52,12 @@
                   </form>
                 </div>
                 <div class="col-auto">
-                  <span class="h6">{{ post_detail.liked.all.count }}️</span>
+                  <span class="h6"><b>{{ post_detail.liked.all.count }}️</b></span>
                   <span>❤️‍🔥</span>
                 </div>
                 <div class="col-auto">
-                  <span class="h6">{{ post_detail.created_time }}</span>
-                  <span>Data posting</span>
+                  <span class="h6">🗓 {{ post_detail.created_time }}</span>
+                  <span>📌</span>
                 </div>
               </div>
               <p class="text-lg mb-0">
@@ -196,12 +196,12 @@
                   </form>
                 </div>
                 <div class="col-auto">
-                  <span class="h6">{{ post_detail.liked.all.count }}️</span>
+                  <span class="h6"><b>{{ post_detail.liked.all.count }}️</b></span>
                   <span>❤️‍🔥</span>
                 </div>
                 <div class="col-auto">
-                  <span class="h6">Posted </span>
-                  <span> {{ post_detail.created_time }}</span>
+                  <span class="h6">🗓 </span>
+                  <span><b>{{ post_detail.created_time }}📌</b></span>
                 </div>
               </div>
               <p>{{ post.content | truncatewords:30 }}</p>

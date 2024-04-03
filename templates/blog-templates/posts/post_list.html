@@ -86,7 +86,7 @@
           padding: 0.5em;">Dashboard</h1>
           {% include 'blog-templates/posts/dropdowns.html' %}
         </div>
-       
+
         <div class="container align-items-center" id="postContainer">
           {% for post in post_list %}
             <div class="container">
@@ -134,12 +134,12 @@
                           </form>
                         </div>
                         <div class="col-auto">
-                          <span class="h6">{{ post.liked.all.count }}️</span>
+                          <span class="h6"><b>{{ post.liked.all.count }}️</b></span>
                           <span>❤️‍🔥</span>
                         </div>
                         <div class="col-auto">
-                          <span class="h6">{{ post.created_time }}</span>
-                          <span>Data posting</span>
+                          <span class="h6">🗓 {{ post.created_time }}</span>
+                          <span>📌</span>
                         </div>
                       </div>
                       <p class="text-lg mb-0">
@@ -169,7 +169,3 @@
 
 {% endblock content %}
 
-{#{% block javascripts %}#}
-{#  <script type="text/javascript" src="{% static 'js/voto.js' %}"></script>#}
-{##}
-{#{% endblock javascripts %}#}

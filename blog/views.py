@@ -259,11 +259,12 @@ class UserProfileUpdateView(generic.UpdateView):
         last_name = request.POST.get('last_name')
         phone = request.POST.get('phone', None)
         birthday = request.POST.get('birthday', None)
+        print("VRR" , birthday)
         gender = request.POST.get('gender', None)
         avatar = request.FILES.get('avatar', None)
         user = self.get_object()
         user.phone = phone
-        user.birthday = birthday
+        user.format_birthday = birthday
         user.gender = gender
         user.first_name = first_name
         user.last_name = last_name
