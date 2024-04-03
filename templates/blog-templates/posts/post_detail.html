@@ -85,8 +85,13 @@
               <div class="col-12 mx-auto">
                 <div class="row py-lg-7 py-5">
                   <div class="col-lg-3 col-md-5 position-relative my-auto">
-                    <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                         src="{{ comment.user.avatar.url }}" alt="bruce">
+                    {% if comment.user.avatar %}
+                      <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                           src="{{ comment.user.avatar.url }}" alt="bruce">
+                    {% else %}
+                      <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                           src="{% static 'img/users_photos_posts/default_user_logged_in.png' %}" alt="bruce">
+                    {% endif %}
                   </div>
                   <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
@@ -123,12 +128,14 @@
     </div>
 
     {% if not post_detail.post_comment.all %}
-      <div class="container" style="background: cadetblue; width: 50%;margin-top:2em ;">
+      <div class="container" style="background: cadetblue; width: 50%;margin-top:2em;padding-bottom: 1em">
         <hr>
         <h3 style="color: white;text-align: center">Write first commentary!</h3>
       </div>
     {% endif %}
-    {% include 'includes/pagination.html' %}
+    {% if page_obj %}
+      {% include 'includes/pagination.html' %}
+    {% endif %}
   </section>
   <!-- END Blogs w/ 4 cards w/ image & text & link -->
 

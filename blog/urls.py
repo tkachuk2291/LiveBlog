@@ -1,7 +1,6 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 from blog.views import (
-    index,
     about_us,
     contact_us,
     author,
@@ -13,12 +12,13 @@ from blog.views import (
     UserPasswordResetConfirmView,
     logout_view,
     register, user_profile, UserProfileUpdateView, user_create, PostCreateView, UserPostsListView, PostDeleteView,
-    PostUpdateView, Search_View, PostdublicateListView, like_post
+    PostUpdateView, Search_View, PostdublicateListView, like_post, home_view
 )
 
 urlpatterns = [
     path('post-update/<int:pk>', PostUpdateView.as_view(), name='post-update'),
-    path("home/", index, name="home-page"),
+    path("", home_view, name="home-page"),
+    path("home/", home_view, name="home-page"),
     path("accounts/user_posts/", UserPostsListView.as_view(), name="user-posts"),
     path("accounts/post-delete/<int:pk>/", PostDeleteView.as_view(), name="post-delete"),
     path("post/create", PostCreateView.as_view(), name="post-create"),
@@ -26,7 +26,7 @@ urlpatterns = [
     path('contact-us/', contact_us, name='contact-us'),
     path('author/', author, name='author'),
     path("posts/", PostListView.as_view(), name="post-list"),
-    path("posts-list-d/",  PostdublicateListView.as_view(), name="post-list-d"),
+    path("posts-list-d/", PostdublicateListView.as_view(), name="post-list-d"),
     path("post/<int:pk>/", PostDetailView.as_view(), name="post-detail"),
     path("accounts/login/", UserLoginView.as_view(), name="login"),
     path("accounts/logout/", logout_view, name="logout"),

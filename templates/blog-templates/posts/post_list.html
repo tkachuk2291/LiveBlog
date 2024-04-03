@@ -30,49 +30,26 @@
     {% for search_post in search_title %}
       <div class="container">
       <div class="row">
-        <div class="col-12 mx-auto">
-          <div class="row py-lg-7 py-5">
-            <div class="col-lg-3 col-md-5 position-relative my-auto">
-              {% if search_post.picture %}
-                <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                     src="{{ search_post.picture.url }}" alt="bruce">
-              {% else %}
-                <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                     src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="bruce">
-              {% endif %}
+      <div class="col-12 mx-auto">
+      <div class="row py-lg-7 py-5">
+      <div class="col-lg-3 col-md-5 position-relative my-auto">
+        {% if search_post.picture %}
+          <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+               src="{{ search_post.picture.url }}" alt="bruce">
+        {% else %}
+          <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+               src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="bruce">
+        {% endif %}
 
-            </div>
-            <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <h4 class="mb-0">{{ search_post.title }}</h4>
-                <div class="d-block">
-                  <button type="button" class="btn btn-sm btn-outline-info text-nowrap mb-0">Author profile</button>
-                </div>
-              </div>
-              <div class="row mb-4">
-                <div class="col-auto">
-                  <span class="h6">323</span>
-                  <span>Posts</span>
-                </div>
-                <div class="col-auto">
-                  <span class="h6">3.5k</span>
-                  <span>Followers</span>
-                </div>
-                <div class="col-auto">
-                  <span class="h6">{{ search_post.created_time }}</span>
-                  <span>Data posting</span>
-                </div>
-              </div>
-              <p class="text-lg mb-0">
-                {{ search_post.content | truncatewords:60 }} <br><a
-                  href={% url "blog:post-detail" search_post.pk %} javascript:
-                  class="text-info icon-move-right">continue read
-                <i class="fas fa-arrow-right text-sm ms-1"></i>
-              </a>
-              </p>
-            </div>
+      </div>
+      <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h4 class="mb-0">{{ search_post.title }}</h4>
+          <div class="d-block">
+            <button type="button" class="btn btn-sm btn-outline-info text-nowrap mb-0">Author profile</button>
           </div>
         </div>
+       
       </div>
     {% endfor %}
   {% endif %}
@@ -80,7 +57,7 @@
     {% if post_list != None %}
       <section class="py-sm-7 py-7 position-relative">
 
-        <div class="container text-center mb-5">
+        <div class="container text-center mb-5 mt-5">
           <h1 style=" background-color: white;
           border-radius: 2em;
           padding: 0.5em;">Dashboard</h1>
@@ -94,13 +71,8 @@
                 <div class="col-12 mx-auto">
                   <div class="row py-lg-7 py-5">
                     <div class="col-lg-3 col-md-5 position-relative my-auto">
-                      {% if post.picture %}
-                        <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                             src="{{ post.picture.url }}" alt="bruce">
-                      {% else %}
-                        <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                             src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="bruce">
-                      {% endif %}
+                      <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                           src="{{ post.picture.url }}" alt="bruce">
                     </div>
                     <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
                       <div class="d-flex justify-content-between align-items-center mb-2">

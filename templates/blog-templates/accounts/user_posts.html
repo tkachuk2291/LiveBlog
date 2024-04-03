@@ -7,12 +7,12 @@
 
 
 {% block content %}
-
+  {% load hitcount_tags %}
   <section class="py-sm-7 py-7 position-relative">
     {% include 'blog-templates/posts/dropdowns.html' %}
     <div class="container text-center">
-      <h1 style=" background-color: white; 
-  border-radius: 2em; 
+      <h1 style=" background-color: white;
+  border-radius: 2em;
   padding: 0.5em;">My posts</h1>
     </div>
     {% if post_list %}
@@ -33,7 +33,9 @@
                 <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
                   <div class="d-flex justify-content-between align-items-center mb-2">
                     <h4 class="mb-0">{{ post.title }}</h4>
+                    
                     <div class="d-block">
+                      
                       <a href="{% url "blog:user-profile" user_id %}" type="button"
                          class="btn btn-sm btn-outline-info text-nowrap mb-0">My Profile</a>
                       <a href="{% url "blog:post-update" pk=post.pk %}" type="button"
@@ -46,16 +48,16 @@
 
                   <div class="row mb-4">
                     <div class="col-auto">
-                      <span class="h6">323</span>
-                      <span>Posts</span>
+                      <span class="h6">{% get_hit_count for post %}</span>
+                      <span>👁</span>
                     </div>
                     <div class="col-auto">
-                      <span class="h6">3.5k</span>
-                      <span>Followers</span>
+                      <span class="h6">{{ post.liked.all.count }}</span>
+                      <span>❤️‍🔥</span>
                     </div>
                     <div class="col-auto">
-                      <span class="h6">{{ post.created_time }}</span>
-                      <span>Data posting</span>
+                      <span class="h6">🗓 {{ post.created_time }}</span>
+                      <span>📌</span>
                     </div>
                   </div>
                   <p class="text-lg mb-0">

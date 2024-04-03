@@ -2,20 +2,40 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm, SetPasswordForm, \
     PasswordChangeForm, UsernameField
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from blog.models import Post
+
 User = get_user_model()
 
 
 class ProfileForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=255)
-    last_name = forms.CharField(max_length=255)
-    email = forms.EmailField()
+    first_name = forms.CharField(max_length=15, label=_('First Name'))
+    last_name = forms.CharField(max_length=255, label=_('Last Name'))
+    email = forms.EmailField(label=_('Email'))
+    phone = forms.CharField(max_length=15, label=_('Phone'))
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', ]
-        exclude = ['user']
+        fields = ['first_name', 'last_name', 'phone']
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        if not phone.startswith('+380'):
+            raise ValidationError(_('Phone number must start with +380'))
+        if len(phone) != 13:
+            raise ValidationError(_('Phone number must be 13 characters long'))
+        return phone
+
+    def clean(self):
+        cleaned_data = super().clean()
+        phone = cleaned_data.get('phone')
+        if phone:
+            try:
+                self.clean_phone()
+            except ValidationError as e:
+                self.add_error('phone', e)
+        return cleaned_data
 
 
 def form_validation_error(form):
@@ -66,7 +86,7 @@ class RegistrationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email','photo')
+        fields = ('username', 'email', 'photo')
 
         widgets = {
             'username': forms.TextInput(attrs={

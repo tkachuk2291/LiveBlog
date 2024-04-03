@@ -6,7 +6,6 @@
 {% block content %}
   <div class="container">
     <main class="content" style="margin-top: 7em">
-
       <form action="#" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="row">
@@ -39,8 +38,9 @@
                       <div class="col-lg-6 mx-auto col-md-8 col-sm-5 w-100">
                         <div class="input-group">
                           <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                          <input  class="form-control datepicker"
-                                value="{{ user_profile.format_birthday }}" placeholder="Please select date" type="text" name="birthday">
+                          <input class="form-control datepicker"
+                                 value="{{ user_profile.format_birthday }}" placeholder="Please select date" type="text"
+                                 name="birthday">
 
                         </div>
                       </div>
@@ -70,29 +70,30 @@
                 </div>
                 <div class="col-md-6 mb-3">
                   <label for="gender">Gender</label>
-                  <select name="gender" class="form-select mb-0" id="gender"
-                          aria-label="Gender select example">
-                    <option selected>Gender</option>
+                  <select name="gender" class="form-select mb-0" id="gender" aria-label="Gender select example"
+                          required>
+                    <option value="">Gender</option>
                     {% for key, value in user_profile.GENDER_CHOICES %}
                       <option value="{{ key }}"
                               {% if user_profile.gender == key %}selected{% endif %}>{{ value }}</option>
                     {% endfor %}
                   </select>
                 </div>
+
               </div>
               <div class="row">
                 <div class="col-md-6 mb-3">
                   <div class="form-group">
                     <label for="email">Email</label>
                     <input name="email" class="form-control" id="email" type="email"
-                           placeholder="name@company.com" value="{{ user_profile.email }}" readonly>
+                           placeholder="name@company.com" value="{{ user_profile.email }}" required>
                   </div>
                 </div>
                 <div class="col-md-6 mb-3">
                   <div class="form-group">
                     <label for="phone">Phone</label>
                     <input name="phone" class="form-control" id="phone" type="number"
-                           placeholder="+12-345 678 910" value="{{ user_profile.phone }}" required>
+                           placeholder="+380000000000" value="{{ user_profile.phone }}" required>
                   </div>
                 </div>
               </div>
@@ -108,10 +109,15 @@
                   <div class="profile-cover rounded-top"
                        data-background="/static/assets/img/profile-cover.jpg"></div>
                   <div class="card-body pb-4">
-                    <img src="{{ user_profile.avatar.url }}"
-                         class="user-avatar large-avatar rounded-circle mx-auto mt-n4 mb-4" alt="Neil Portrait"
-                         style="width: 20em; height:20em"/>
-
+                    {% if user_profile %}
+                      <img src="{{ user_profile.avatar.url }}"
+                           class="user-avatar large-avatar rounded-circle mx-auto mt-n4 mb-4" alt="Neil Portrait"
+                           style="width: 20em; height:20em"/>
+                    {% else %}
+                      <img src="{% static 'img/users_photos_posts/default_user_logged_in.png' %}"
+                           class="user-avatar large-avatar rounded-circle mx-auto mt-n4 mb-4" alt="Else"
+                           style="width: 20em; height:20em"/>
+                    {% endif %}
                     <h4 class="h3">{{ profile.user.username }}</h4>
                     <h4 class="font-weight-normal">{{ profile.user.get_full_name }}</h4>
                     <h5 class="font-weight-normal">
@@ -126,31 +132,32 @@
               </div>
               <div class="col-12">
                 <div class="card card-body bg-white border-light shadow-sm mb-4">
-                  <h2 class="h5 mb-4">Select profile photo</h2>
-                  <div class="d-xl-flex align-items-center">
+                  <h2 class="h5 mb-4 text-center">Select profile photo</h2>
+                  <div class="d-xl-flex flex-xl-column align-items-center">
                     <div class="file-field">
                       <div class="d-flex justify-content-xl-center ml-xl-3">
                         <div class="d-flex">
-                                                <span class="icon icon-md">
-                                                    <span class="fas fa-paperclip mr-3"></span>
-                                                </span>
-                          <input name="avatar" type="file">
-                          <div class="d-md-block text-left">
-                            <div class="font-weight-normal text-dark mb-1">Choose Image</div>
-                            <div class="text-gray small">JPG, GIF or PNG. Max size of 800K</div>
+                          <div class="input_container">
+                            <label for="files" class="btn">Browse profile photo</label>
+                            <input name="avatar" id="files" style="display:none;" type="file">
                           </div>
                         </div>
                       </div>
                     </div>
+                    <div class="text-gray small mb-2 mt-2 text-center">JPG, GIF or PNG. Max size of 800K</div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+
       </form>
+
     </main>
   </div>
+  <script>
+      document.querySelector("#files").onchange = function () {
+          const fileName = this.files[0]?.name;
+          const label = document.querySelector("label[for=files]");
+          label.innerText = fileName ?? "Browse profile photo";
+      };
+  </script>
 {% endblock %}
 
 

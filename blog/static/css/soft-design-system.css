@@ -26672,6 +26672,18 @@ span.input-group-text {
     display: none;
 }
 
-.row{
+.row {
     width: 100%;
+}
+
+label {
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-family: 'Helvetica', sans-serif;
+  transition: .5s;
+}
+
+label:hover {
+  background-color: #eee;
 }

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
@@ -12,12 +14,15 @@ from django.contrib.contenttypes.fields import GenericRelation
 class User(AbstractUser):
     GENDER_MALE = 1
     GENDER_FEMALE = 2
+    GENDER_GENDERLESS = 0
     GENDER_CHOICES = [
         (GENDER_MALE, _("Male")),
         (GENDER_FEMALE, _("Female")),
+        (GENDER_GENDERLESS, _("Genderless"))
     ]
     birthday = models.DateField(null=True, blank=True)
-    avatar = models.ImageField(default="default_user_logged_in.png", null=True, blank=True)
+    avatar = models.ImageField(upload_to="users_photos/", default="users_photos/default_user_logged_in.png",
+                               null=True, blank=True)
     gender = models.PositiveSmallIntegerField(choices=GENDER_CHOICES, null=True, blank=True)
     phone = models.CharField(max_length=32, null=True, blank=True)
     slug = models.SlugField(unique=True, blank=True)
@@ -29,11 +34,19 @@ class User(AbstractUser):
 
     @property
     def get_avatar(self):
-        return self.avatar.url if self.avatar else static('static/img/photo_accounts/default_user_logged_in.png')
+        return self.avatar.url if self.avatar else static('img/photos_accounts/default_user_logged_in.png')
 
     @property
     def format_birthday(self):
-        return self.birthday
+        if self.birthday:
+            return self.birthday.strftime("%d/%B/%Y")
+        return ""
+
+    @format_birthday.setter
+    def format_birthday(self, value):
+        if value:
+            self.birthday = datetime.strptime(value, "%d/%B/%Y")
+            self.save()
 
 
 class Post(models.Model):
@@ -43,7 +56,7 @@ class Post(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
     liked = models.ManyToManyField(User, related_name="liked", default=None, blank=True)
     slug = AutoSlugField(populate_from="title")
-    picture = models.ImageField(default="post_default_images.jpeg", null=True, blank=True)
+    picture = models.ImageField(upload_to="users_photos_posts", default="users_photos_posts/post_default_images.jpeg", null=True, blank=True)
     tags = TaggableManager()
     hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk',
                                         related_query_name='hit_count_generic_relation')

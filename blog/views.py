@@ -19,7 +19,7 @@ from blog.models import Post, User, Comment, Like
 from django.contrib.auth import views as auth_views
 
 
-def index(request):
+def home_view(request):
     num_post = Post.objects.all().count()
     num_likes = Like.objects.all().count()
     num_views = Post.objects.aggregate(total_views=Sum('hit_count_generic__hits'))['total_views']
@@ -28,11 +28,11 @@ def index(request):
         'num_likes': num_likes,
         'num_views': num_views
     }
-    return render(request, 'blog-templates/index.html', context)
+    return render(request, 'blog-templates/home/home.html', context)
 
 
-def home_view(request):
-    return render(request, 'blog-templates/posts/post_list.html')
+# def home_view(request):
+#     return render(request, 'blog-templates/posts/post_list.html')
 
 
 def user_create(request):
@@ -223,7 +223,10 @@ def like_post(request):
             else:
                 like.value = "🤍️"
         like.save()
-    return redirect("blog:post-list")
+    redirect_to = request.META.get('HTTP_REFERER', 'blog:post-list')
+
+    # Выполняем редирект
+    return redirect(redirect_to)
 
 
 class PostCreateView(generic.CreateView):
@@ -259,7 +262,7 @@ class UserProfileUpdateView(generic.UpdateView):
         last_name = request.POST.get('last_name')
         phone = request.POST.get('phone', None)
         birthday = request.POST.get('birthday', None)
-        print("VRR" , birthday)
+        email = request.POST.get('email', None)
         gender = request.POST.get('gender', None)
         avatar = request.FILES.get('avatar', None)
         user = self.get_object()
@@ -268,17 +271,16 @@ class UserProfileUpdateView(generic.UpdateView):
         user.gender = gender
         user.first_name = first_name
         user.last_name = last_name
+        user.email = email
         if avatar:
             user.avatar = avatar
         user.save()
-        messages.success(self.request, 'Profile updated successfully')
 
         return redirect("blog:user-profile", pk=user.pk)
 
     def form_valid(self, form):
         user = form.save(commit=False)
         user.save()
-        messages.success(self.request, 'Profile updated successfully')
         return super().form_valid(form)
 
 
@@ -289,17 +291,10 @@ class PostUpdateView(generic.UpdateView):
     fields = ["title", "content", "picture"]
     success_url = reverse_lazy("blog:user-posts")
 
-    def post(self, request, pk):
-        post_form = PostCreateForm(request.POST, request.FILES)
-        if post_form.is_valid():
-            post = post_form.save(commit=False)
-            post.owner = request.user
-            post.picture = post.picture
-            post.title = post.title
-            post.save()
-            return redirect("blog:post-list")
-        else:
-            return render(request, "blog-templates/posts/post_create.html", {'form': post_form})
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        post.save()
+        return super().form_valid(form)
 
 
 class Search_View(ListView):
