@@ -1,5 +1,12 @@
 from django.contrib.auth import logout
-from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView, PasswordChangeView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import (
+    LoginView,
+    PasswordResetView,
+    PasswordResetConfirmView,
+    PasswordChangeView,
+)
 from django.core.paginator import Paginator
 from django.db.models import Sum
 from django.http import HttpResponseRedirect
@@ -9,14 +16,22 @@ from django.views import generic
 from django.contrib import messages
 from django.views.generic import ListView
 from hitcount.views import HitCountDetailView
-from blog.forms import UserLoginForm, UserPasswordResetForm, UserSetPasswordForm, UserPasswordChangeForm, \
-    RegistrationForm, ProfileForm, PostCreateForm
+from blog.forms import (
+    UserLoginForm,
+    UserPasswordResetForm,
+    UserSetPasswordForm,
+    UserPasswordChangeForm,
+    RegistrationForm,
+    ProfileForm,
+    PostCreateForm,
+)
 from blog.models import Post, User, Comment, Like
 from django.contrib.auth import views as auth_views
 
 
 def home_view(request):
     num_post = Post.objects.all().count()
+    print(num_post)
     num_likes = Like.objects.all().count()
     num_views = Post.objects.aggregate(total_views=Sum('hit_count_generic__hits'))['total_views']
     context = {
@@ -27,52 +42,12 @@ def home_view(request):
     return render(request, 'blog-templates/home/home.html', context)
 
 
-class UserPostsListView(generic.ListView):
-    model = Post
-    template_name = 'blog-templates/accounts/user_posts.html'
-    context_object_name = 'post_list'
-    paginate_by = 5
-
-    def get_queryset(self):
-        user = self.request.user
-        return Post.objects.filter(owner=user.pk)
-
-    def get_context_data(self, **kwargs):
-        context_data = super(UserPostsListView, self).get_context_data(**kwargs)
-        context_data['user_id'] = self.request.user.id
-        return context_data
-
-
-class PostListView(generic.ListView):
-    model = Post
-    context_object_name = "post_list"
-    template_name = "blog-templates/posts/post_list.html"
-    paginate_by = 5
-
-    def get_context_data(self, **kwargs):
-        context_data = super(PostListView, self).get_context_data(**kwargs)
-        user = self.request.user
-        context_data['user'] = user
-        return context_data
-
-
-class PostDeleteView(generic.DeleteView):
-    model = Post
-    template_name = "blog-templates/accounts/user_posts.html"
-    success_url = reverse_lazy('blog:user-posts')
-
-
-class UserLoginView(LoginView):
-    template_name = 'blog-templates/accounts/sign-in.html'
-    form_class = UserLoginForm
-
-
 def logout_view(request):
     logout(request)
     return redirect("blog:login")
 
 
-def register(request):
+def register_view(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST, request.FILES)
         if form.is_valid():
@@ -94,6 +69,45 @@ def register(request):
     return render(request, 'blog-templates/accounts/sign-up.html', context)
 
 
+@login_required
+def like_post_view(request):
+    user = request.user
+    if request.method == "POST":
+        post_id = request.POST.get("post_id")
+        post_obj = Post.objects.get(id=post_id)
+        if user in post_obj.liked.all():
+            post_obj.liked.remove(user)
+        else:
+            post_obj.liked.add(user)
+        like, created = Like.objects.get_or_create(user=user, post_id=post_id)
+        if not created:
+            if like.value == "🤍︎":
+                like.value = "❤️"
+
+            else:
+                like.value = "🤍️"
+        like.save()
+    redirect_to = request.META.get('HTTP_REFERER', 'blog:post-list')
+
+    return redirect(redirect_to)
+
+
+class UserPostsListView(LoginRequiredMixin, generic.ListView):
+    model = Post
+    template_name = 'blog-templates/accounts/user_posts.html'
+    context_object_name = 'post_list'
+    paginate_by = 5
+
+    def get_queryset(self):
+        user = self.request.user
+        return Post.objects.filter(owner=user.pk)
+
+    def get_context_data(self, **kwargs):
+        context_data = super(UserPostsListView, self).get_context_data(**kwargs)
+        context_data['user_id'] = self.request.user.id
+        return context_data
+
+
 class UserPasswordResetView(PasswordResetView):
     template_name = "blog-templates/accounts/password_reset.html"
     form_class = UserPasswordResetForm
@@ -111,6 +125,67 @@ class UserPasswordChangeView(PasswordChangeView):
     template_name = 'blog-templates/accounts/password_change.html'
     form_class = UserPasswordChangeForm
     success_url = reverse_lazy('blog:login')
+
+
+class UserLoginView(LoginView):
+    template_name = 'blog-templates/accounts/sign-in.html'
+    form_class = UserLoginForm
+
+
+class CustomPasswordChangeDoneView(auth_views.PasswordChangeDoneView):
+    success_url = reverse_lazy('blog:login')
+
+
+class UserProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = User
+    template_name = "blog-templates/accounts/user_profile.html"
+    form_class = ProfileForm
+    context_object_name = 'user_profile'
+
+    def post(self, request, *args, **kwargs):
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
+        phone = request.POST.get('phone', None)
+        birthday = request.POST.get('birthday', None)
+        email = request.POST.get('email', None)
+        gender = request.POST.get('gender', None)
+        avatar = request.FILES.get('avatar', None)
+        user = self.get_object()
+        user.phone = phone
+        user.format_birthday = birthday
+        user.gender = gender
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        if avatar:
+            user.avatar = avatar
+        user.save()
+
+        return redirect("blog:user-profile", pk=user.pk)
+
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.save()
+        return super().form_valid(form)
+
+
+class PostListView(LoginRequiredMixin, generic.ListView):
+    model = Post
+    context_object_name = "post_list"
+    template_name = "blog-templates/posts/post_list.html"
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context_data = super(PostListView, self).get_context_data(**kwargs)
+        user = self.request.user
+        context_data['user'] = user
+        return context_data
+
+
+class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Post
+    template_name = "blog-templates/accounts/user_posts.html"
+    success_url = reverse_lazy('blog:user-posts')
 
 
 class PostDetailView(HitCountDetailView):
@@ -150,29 +225,7 @@ class PostDetailView(HitCountDetailView):
         )
 
 
-def like_post(request):
-    user = request.user
-    if request.method == "POST":
-        post_id = request.POST.get("post_id")
-        post_obj = Post.objects.get(id=post_id)
-        if user in post_obj.liked.all():
-            post_obj.liked.remove(user)
-        else:
-            post_obj.liked.add(user)
-        like, created = Like.objects.get_or_create(user=user, post_id=post_id)
-        if not created:
-            if like.value == "🤍︎":
-                like.value = "❤️"
-
-            else:
-                like.value = "🤍️"
-        like.save()
-    redirect_to = request.META.get('HTTP_REFERER', 'blog:post-list')
-
-    return redirect(redirect_to)
-
-
-class PostCreateView(generic.CreateView):
+class PostCreateView(LoginRequiredMixin, generic.CreateView):
     model = Post
     template_name = "blog-templates/posts/post_create.html"
     context_object_name = "post_create"
@@ -193,44 +246,7 @@ class PostCreateView(generic.CreateView):
             return render(request, "blog-templates/posts/post_create.html", {'form': post_form})
 
 
-class CustomPasswordChangeDoneView(auth_views.PasswordChangeDoneView):
-    success_url = reverse_lazy('blog:login')
-
-
-class UserProfileUpdateView(generic.UpdateView):
-    model = User
-    template_name = "blog-templates/accounts/user_profile.html"
-    form_class = ProfileForm
-    context_object_name = 'user_profile'
-
-    def post(self, request, *args, **kwargs):
-        first_name = request.POST.get('first_name')
-        last_name = request.POST.get('last_name')
-        phone = request.POST.get('phone', None)
-        birthday = request.POST.get('birthday', None)
-        email = request.POST.get('email', None)
-        gender = request.POST.get('gender', None)
-        avatar = request.FILES.get('avatar', None)
-        user = self.get_object()
-        user.phone = phone
-        user.format_birthday = birthday
-        user.gender = gender
-        user.first_name = first_name
-        user.last_name = last_name
-        user.email = email
-        if avatar:
-            user.avatar = avatar
-        user.save()
-
-        return redirect("blog:user-profile", pk=user.pk)
-
-    def form_valid(self, form):
-        user = form.save(commit=False)
-        user.save()
-        return super().form_valid(form)
-
-
-class PostUpdateView(generic.UpdateView):
+class PostUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Post
     template_name = "blog-templates/posts/post_update.html"
     context_object_name = 'post_update'
@@ -243,7 +259,7 @@ class PostUpdateView(generic.UpdateView):
         return super().form_valid(form)
 
 
-class Search_View(ListView):
+class SearchView(LoginRequiredMixin, ListView):
     model = Post
     template_name = "blog-templates/posts/post_list.html"
     context_object_name = "search_title"
