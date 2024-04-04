@@ -35,10 +35,10 @@
       <div class="col-lg-3 col-md-5 position-relative my-auto">
         {% if search_post.picture %}
           <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-               src="{{ search_post.picture.url }}" alt="bruce">
+               src="{{ search_post.picture.url }}" alt="image">
         {% else %}
           <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-               src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="bruce">
+               src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="image">
         {% endif %}
 
       </div>
@@ -49,7 +49,7 @@
             <button type="button" class="btn btn-sm btn-outline-info text-nowrap mb-0">Author profile</button>
           </div>
         </div>
-       
+
       </div>
     {% endfor %}
   {% endif %}
@@ -72,7 +72,7 @@
                   <div class="row py-lg-7 py-5">
                     <div class="col-lg-3 col-md-5 position-relative my-auto">
                       <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                           src="{{ post.picture.url }}" alt="bruce">
+                           src="{{ post.picture.url }}" alt="image">
                     </div>
                     <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
                       <div class="d-flex justify-content-between align-items-center mb-2">
@@ -129,6 +129,7 @@
             </div>
           {% endfor %}
           {% include 'includes/pagination.html' %}
+        </div>
       </section>
     {% else %}
       <div class="container mt-10"
@@ -140,4 +141,3 @@
   {% endif %}
 
 {% endblock content %}
-

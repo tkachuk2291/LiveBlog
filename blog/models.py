@@ -1,14 +1,13 @@
-from datetime import datetime
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
-from taggit.managers import TaggableManager
 from django.utils.translation import gettext as _
 from django.templatetags.static import static
-from autoslug import AutoSlugField
-from hitcount.models import HitCountMixin, HitCount
 from django.contrib.contenttypes.fields import GenericRelation
+from datetime import datetime
+from taggit.managers import TaggableManager
+from autoslug import AutoSlugField
+from hitcount.models import HitCount
 
 
 class User(AbstractUser):
@@ -56,7 +55,8 @@ class Post(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
     liked = models.ManyToManyField(User, related_name="liked", default=None, blank=True)
     slug = AutoSlugField(populate_from="title")
-    picture = models.ImageField(upload_to="users_photos_posts", default="users_photos_posts/post_default_images.jpeg", null=True, blank=True)
+    picture = models.ImageField(upload_to="users_photos_posts", default="users_photos_posts/post_default_images.jpeg",
+                                null=True, blank=True)
     tags = TaggableManager()
     hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk',
                                         related_query_name='hit_count_generic_relation')

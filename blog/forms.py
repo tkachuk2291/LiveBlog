@@ -1,6 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm, SetPasswordForm, \
-    PasswordChangeForm, UsernameField
+from django.contrib.auth.forms import (
+    UserCreationForm, AuthenticationForm, PasswordResetForm,
+    SetPasswordForm, PasswordChangeForm, UsernameField
+)
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
@@ -10,40 +12,23 @@ User = get_user_model()
 
 
 class ProfileForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=15, label=_('First Name'))
-    last_name = forms.CharField(max_length=255, label=_('Last Name'))
-    email = forms.EmailField(label=_('Email'))
-    phone = forms.CharField(max_length=15, label=_('Phone'))
-
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'phone']
-
-    def clean_phone(self):
-        phone = self.cleaned_data['phone']
-        if not phone.startswith('+380'):
-            raise ValidationError(_('Phone number must start with +380'))
-        if len(phone) != 13:
-            raise ValidationError(_('Phone number must be 13 characters long'))
-        return phone
-
+        fields = ['first_name', 'last_name', 'email' , 'phone' , 'gender' , 'birthday' , 'username' ]
     def clean(self):
-        cleaned_data = super().clean()
+        cleaned_data = super(ProfileForm, self).clean()
+        username = cleaned_data.get('username')
+        birthday = cleaned_data.get('birthday')
+        email = cleaned_data.get('email')
         phone = cleaned_data.get('phone')
-        if phone:
-            try:
-                self.clean_phone()
-            except ValidationError as e:
-                self.add_error('phone', e)
+
+        if username and len(username) < 5:
+            self.add_error('username', 'Minimum 5 characters required')
+
+        if phone and len(phone) < 13:
+            self.add_error('phone', 'Phone Should Contain a minimum of 13 characters')
+
         return cleaned_data
-
-
-def form_validation_error(form):
-    msg = ""
-    for field in form:
-        for error in field.errors:
-            msg += "%s: %s \\n" % (field.label if hasattr(field, 'label') else 'Error', error)
-    return msg
 
 
 class PostCreateForm(forms.ModelForm):
@@ -53,7 +38,7 @@ class PostCreateForm(forms.ModelForm):
 
     def clean_title(self):
         title = self.cleaned_data['title']
-        max_length = 30
+        max_length = 100
         if len(title) > max_length:
             raise forms.ValidationError(
                 f'Title length must not exceed {max_length} characters.'

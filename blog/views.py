@@ -31,7 +31,6 @@ from django.contrib.auth import views as auth_views
 
 def home_view(request):
     num_post = Post.objects.all().count()
-    print(num_post)
     num_likes = Like.objects.all().count()
     num_views = Post.objects.aggregate(total_views=Sum('hit_count_generic__hits'))['total_views']
     context = {
@@ -151,28 +150,22 @@ class UserProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
         gender = request.POST.get('gender', None)
         avatar = request.FILES.get('avatar', None)
         user = self.get_object()
-        user.phone = phone
         user.format_birthday = birthday
         user.gender = gender
         user.first_name = first_name
         user.last_name = last_name
         user.email = email
+        user.phone = phone
         if avatar:
             user.avatar = avatar
         user.save()
-
         return redirect("blog:user-profile", pk=user.pk)
-
-    def form_valid(self, form):
-        user = form.save(commit=False)
-        user.save()
-        return super().form_valid(form)
 
 
 class PostListView(LoginRequiredMixin, generic.ListView):
     model = Post
     context_object_name = "post_list"
-    template_name = "blog-templates/posts/post_list.html"
+    template_name = "blog-templates/posts/posts_list.html"
     paginate_by = 5
 
     def get_context_data(self, **kwargs):
@@ -261,7 +254,7 @@ class PostUpdateView(LoginRequiredMixin, generic.UpdateView):
 
 class SearchView(LoginRequiredMixin, ListView):
     model = Post
-    template_name = "blog-templates/posts/post_list.html"
+    template_name = "blog-templates/posts/posts_list.html"
     context_object_name = "search_title"
 
     def get_queryset(self):
