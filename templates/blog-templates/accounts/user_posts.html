@@ -33,9 +33,9 @@
                 <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
                   <div class="d-flex justify-content-between align-items-center mb-2">
                     <h4 class="mb-0">{{ post.title }}</h4>
-                    
+
                     <div class="d-block">
-                      
+
                       <a href="{% url "blog:user-profile" user_id %}" type="button"
                          class="btn btn-sm btn-outline-info text-nowrap mb-0">My Profile</a>
                       <a href="{% url "blog:post-update" pk=post.pk %}" type="button"
@@ -100,20 +100,16 @@
       {% include 'includes/pagination.html' %}
       </section>
 
-      <div class="container py-7">
-        <div class="row mt-3">
-          <div class="col-sm-4 col-6 mx-auto">
-          </div>
-        </div>
-      </div>
     {% else %}
-      <div class="container"
-           style="background: cadetblue; width: 50%; margin: 2em auto; padding-bottom: 2em; padding-top: 2em; text-align: center;">
-        <h3 style="color: white;">Create first Post!</h3>
-        <a href="{% url 'blog:post-create' %}?from_user_first_posts=true" class="btn btn-outline-success text-white">Create Post</a>
+      <div class="container" style="margin-top: 10em;margin-bottom: 8em;">
+
+        <div class="container"
+             style="background: cadetblue; width: 50%; margin: 2em auto; padding-bottom: 2em; padding-top: 2em; text-align: center;">
+          <h3 style="color: white;">Create first Post!</h3>
+          <a href="{% url 'blog:post-create' %}?from_user_first_posts=true" class="btn btn-outline-success text-white">Create
+            Post</a>
+        </div>
       </div>
     {% endif %}
 
 {% endblock content %}
-
-

@@ -7,7 +7,6 @@
 
 {% block content %}
   {% load hitcount_tags %}
-  <!-- START Testimonials w/ user image & text & info -->
   <section class="py-sm-7 py-5 position-relative">
     <div class="container">
       <div class="row">
@@ -16,13 +15,13 @@
             <div class="col-lg-3 col-md-5 position-relative my-auto">
               {% if post.picture %}
                 <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                     src="{{ post_detail.picture.url }}" alt="bruce">
+                     src="{{ post_detail.picture.url }}" alt="image">
               {% else %}
                 <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                     src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="bruce">
+                     src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="image">
               {% endif %}
             </div>
-            <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4 text-center">
+            <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
               <div class="d-flex justify-content-between align-items-center mb-2 text-center">
                 <h4 class="mb-0 text-center">{{ post_detail.title }}</h4>
                 <div class="d-block">
@@ -61,7 +60,7 @@
                 </div>
               </div>
               <p class="text-lg mb-0">
-                {{ post_detail.content | truncatewords:60 }} <br>
+                {{ post_detail.content | truncatewords:4000 }} <br>
               </p>
             </div>
           </div>
@@ -69,9 +68,7 @@
       </div>
     </div>
   </section>
-  <!-- END Testimonials w/ user image & text & info -->
 
-  <!-- START Blogs w/ 4 cards w/ image & text & link -->
   <section class="py-3">
     <div class="container">
       <section class="py-lg-1">
@@ -87,10 +84,10 @@
                   <div class="col-lg-3 col-md-5 position-relative my-auto">
                     {% if comment.user.avatar %}
                       <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                           src="{{ comment.user.avatar.url }}" alt="bruce">
+                           src="{{ comment.user.avatar.url }}" alt="image">
                     {% else %}
                       <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
-                           src="{% static 'img/users_photos_posts/default_user_logged_in.png' %}" alt="bruce">
+                           src="{% static 'img/users_photos_posts/default_user_logged_in.png' %}" alt="image">
                     {% endif %}
                   </div>
                   <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
@@ -137,9 +134,7 @@
       {% include 'includes/pagination.html' %}
     {% endif %}
   </section>
-  <!-- END Blogs w/ 4 cards w/ image & text & link -->
 
-  <!-- Форма для добавления комментариев -->
   <div class="container py-4">
     <div class="row">
       <div class="col-lg-7 mx-auto d-flex justify-content-center flex-column">
@@ -171,7 +166,6 @@
     </div>
   </div>
 
-  <!-- Блок с дополнительными полезными статьями -->
   <div class="container mt-6">
     <div class="row align-items-center text-center">
       <h3 class="mb-5">Check out more useful articles</h3>
@@ -221,5 +215,3 @@
     </div>
   </div>
 {% endblock content %}
-
-

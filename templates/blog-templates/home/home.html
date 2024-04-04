@@ -18,13 +18,13 @@
     backdrop-filter: saturate(200%) blur(30px);
     border-radius: 0.5rem;
     box-shadow: inset 0px 0px 2px #fefefed1;
-    -webkit-backdrop-filter: saturate(200%;" class="text-color pt-3 mt-n5">Blog</h1>
+    -webkit-backdrop-filter: saturate(200%)" class="text-color pt-3 mt-n5">Blog</h1>
             <p class=" mt-3" style="color: #4A392D;
     background-color: rgba(255, 255, 255, 0.8) !important;
     backdrop-filter: saturate(200%) blur(30px);
     border-radius: 0.5rem;
     box-shadow: inset 0px 0px 2px #fefefed1;
-    -webkit-backdrop-filter: saturate(200%;">The best blog for post and comment! </p>
+    -webkit-backdrop-filter: saturate(200%)">The best blog for post and comment! </p>
           </div>
         </div>
       </div>
@@ -56,7 +56,8 @@
           <div class="row">
             <div class="col-md-4 position-relative">
               <div class="p-3 text-center">
-                <h1 class="text-gradient text-primary"><span id="state1" countTo="{{ num_post }}">0</span></h1>
+                <h1 class="text-gradient text-primary"><span id="state1" countTo="{{ num_post }}">{{ num_post }}</span>
+                </h1>
                 <h5 class="mt-3">Posts</h5>
                 <p class="text-sm">Precise number of posts</p>
               </div>
@@ -64,7 +65,8 @@
             </div>
             <div class="col-md-4 position-relative">
               <div class="p-3 text-center">
-                <h1 class="text-gradient text-primary bob"><span id="state2" countTo="{{ num_likes }}">0</span></h1>
+                <h1 class="text-gradient text-primary bob"><span id="state2"
+                                                                 countTo="{{ num_likes }}">{{ num_likes }}</span></h1>
                 <h5 class="mt-3">Likes</h5>
                 <p class="text-sm">Precise number of likes</p>
               </div>
@@ -72,7 +74,7 @@
             </div>
             <div class="col-md-4">
               <div class="p-3 text-center">
-                <h1 class="text-gradient text-primary" id="state3" countTo="{{ num_views }}">0</h1>
+                <h1 class="text-gradient text-primary" id="state3" countTo="{{ num_views }}">{{ num_views }}</h1>
                 <h5 class="mt-3">Views</h5>
                 <p class="text-sm">Precise number of views</p>
               </div>
@@ -87,7 +89,7 @@
 
 {% endblock content %}
 
-{% block javascripts %}
+{% block javascript %}
 
   <script type="text/javascript">
 
@@ -118,4 +120,4 @@
       }
   </script>
 
-{% endblock javascripts %}
+{% endblock javascript %}

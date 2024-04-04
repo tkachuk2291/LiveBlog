@@ -31,7 +31,7 @@
                     {% if post_update.picture %}
                       <img src="{{ post_update.picture.url }}"
                            class="user-avatar large-avatar mx-auto  mb-4 custom-avatar"
-                           alt="Neil Portrait" style="width: 15em; height:13em; border-radius: 0.75rem !important;">
+                           alt="image" style="width: 15em; height:13em; border-radius: 0.75rem !important;">
                     {% endif %}
                     <h4 class="h3">{{ profile.user.username }}</h4>
                     <h4 class="font-weight-normal">{{ profile.user.get_full_name }}</h4>
@@ -43,13 +43,20 @@
                   <div class="col-12 ">
                     <h2 class="h5">Select post photo</h2>
                     <div class="d-flex justify-content-center align-items-center">
-                      <label for="avatar" class="icon icon-lg mb-5">
-                        <span class="fas fa-paperclip mr-3  fa-3x"></span>
-                      </label>
-                      <input id="avatar" name="picture" type="file" style="display: none;">
+                      <div class="input_container">
+                        <label for="files" class="btn">Upload profile photo</label>
+                        <input id="files" style="display:none;" type="file">
+                      </div>
+                      <script>
+                          document.querySelector("#files").onchange = function () {
+                              const fileName = this.files[0]?.name;
+                              const label = document.querySelector("label[for=files]");
+                              label.innerText = fileName ?? "Upload profile photo";
+                          };
+                      </script>
                       <div class="d-md-block text-left">
                         <div class="font-weight-normal text-dark mb-1"></div>
-                        <div class="text-gray small"></div>
+                        <div class="text-gray small mb-8"></div>
                       </div>
                     </div>
 
@@ -67,7 +74,8 @@
                   <div class="col-md-6 mb-3 w-100">
                     <div class="text-center">
                       <label for="title">Title</label>
-                      <input name="title" class="form-control text-center" id="title" type="text" placeholder="Enter post title"
+                      <input name="title" class="form-control text-center" id="title" type="text"
+                             placeholder="Enter post title"
                              value="{{ post_update.title }}" required>
                     </div>
                   </div>
@@ -90,5 +98,3 @@
     </main>
   </div>
 {% endblock %}
-
-

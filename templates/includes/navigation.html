@@ -251,7 +251,8 @@
                 <div class="custom-avatar">
                   <a href="{% url 'blog:login' %}" class="avatar avatar-sm rounded-circle">
                     <img alt="Image placeholder"
-                         src="{% static 'img/photos_accounts/user_profile_anonymous.png' %}" style="width: 3em; height: 3em;">
+                         src="{% static 'img/photos_accounts/user_profile_anonymous.png' %}"
+                         style="width: 3em; height: 3em;">
                   </a>
                 </div>
 
@@ -264,10 +265,11 @@
                 <div class="input-group mb-1">
                   <form action="{% url 'blog:search_blog' %}" method="get" class="input-group mb-1"
                         style="display: flex; align-items: center;">
-                    <button type="submit" class="input-group-text" style="background: none;   outline: 2px solid transparent;;">
+                    <button type="submit" class="input-group-text"
+                            style="background: none;   outline: 2px solid transparent;;">
                       <i class="fas fa-search" aria-hidden="true"></i>
                     </button>
-                    <input id="txt" class="form-control"  placeholder="ㅤㅤSearch" type="search" name="title_contains"
+                    <input id="txt" class="form-control" placeholder="ㅤㅤSearch" type="search" name="title_contains"
                            style="flex: 1;">
                     {% csrf_token %}
                   </form>

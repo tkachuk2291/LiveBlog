@@ -47,18 +47,14 @@
                     </div>
                     <script>
                         document.addEventListener("DOMContentLoaded", function () {
-                            // Получаем значение даты из профиля пользователя
                             var birthday = "{{ user_profile.birthday }}";
 
-                            // Проверяем, есть ли элементы с классом "datepicker"
                             var datepickerElements = document.querySelectorAll(".datepicker");
                             if (datepickerElements.length > 0) {
                                 console.log(birthday)
-                                // Проходимся по каждому элементу и инициализируем flatpickr с заданной датой
                                 datepickerElements.forEach(function (element) {
                                     flatpickr(element, {
-                                        dateFormat: "j/F/Y", // Формат даты
-                                        // Устанавливаем значение даты из профиля пользователя по умолчанию
+                                        dateFormat: "j/F/Y",
                                     });
                                 });
                             }
@@ -92,8 +88,9 @@
                 <div class="col-md-6 mb-3">
                   <div class="form-group">
                     <label for="phone">Phone</label>
+
                     <input name="phone" class="form-control" id="phone" type="number"
-                           placeholder="+380000000000" value="{{ user_profile.phone }}" required>
+                           placeholder="+38067657820" value="{{ user_profile.phone }}" required>
                   </div>
                 </div>
               </div>
