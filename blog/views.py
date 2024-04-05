@@ -22,7 +22,6 @@ from blog.forms import (
     UserSetPasswordForm,
     UserPasswordChangeForm,
     RegistrationForm,
-    ProfileForm,
     PostCreateForm,
 )
 from blog.models import Post, User, Comment, Like
@@ -142,7 +141,9 @@ class CustomPasswordChangeDoneView(auth_views.PasswordChangeDoneView):
 class UserProfileUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = User
     template_name = "blog-templates/accounts/user_profile.html"
-    form_class = ProfileForm
+    fields = ["first_name", "last_name",
+              "email", "gender",
+              "phone", "avatar", "birthday"]
     context_object_name = "user_profile"
 
     def post(self, request, *args, **kwargs):
