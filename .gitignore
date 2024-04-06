@@ -6,3 +6,4 @@ db.sqlite3
 media/
 .env
 .flake8
+.DS_Store
