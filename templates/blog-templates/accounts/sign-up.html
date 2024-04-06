@@ -13,14 +13,13 @@
 {% block content %}
 
   <section>
-    <div class="page-header min-vh-100">
-      <div class="container">
-        <div class="row">
-          <div
-              class="col-lg-6 d-lg-flex d-none h-100 my-auto pe-0 text-center justify-content-center align-items-center">
+    <div class="page-header min-vh-100 ">
+      <div class="container mt-7 mr-1">
+        <div class="row ">
+          <div class="col-xl-4 col-lg-3 col-md-5 d-flex flex-column mx-lg-0 mx-auto">
             <div class="card card-plain">
               <div class="card-header pb-0 text-left">
-                <h4 class="font-weight-bolder">Sign Up</h4>
+                <h4 class="font-weight-bolder text-center">Sign Up</h4>
                 <p class="mb-0">Enter your valid credentials to register</p>
               </div>
               <div class="card-body">
@@ -38,7 +37,6 @@
                   <div class="mb-3">
 
                     <div class="input_container">
-                      <label for="id_photo">Photo:</label>#}
                       <label for="files" class="btn">Upload Profile Photo</label>
                       <input name="photo" id="files" style="display:none;" type="file">
                     </div>
@@ -63,15 +61,20 @@
               </div>
             </div>
           </div>
+        </div>
+        <div
+            class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
           <div
-              class="col-lg-6 d-lg-flex d-none h-100 my-auto pe-0 text-center justify-content-center align-items-center">
-
-
-            <div class="position-relative full-width-height-img-container">
-              <img class="full-width-height-img" src="{% static 'img/photos_accounts/sign_up.jpg' %}">
+              class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center">
+            <img src="{% static 'img/shapes/pattern-lines.svg' %}" alt="pattern-lines"
+                 class="position-absolute opacity-3 start-1">
+            <div class="position-relative">
+              <img class="max-width-500 w-100 position-relative z-index-2"
+                   src="{% static 'img/photos_accounts/chat.png' %}" alt="chat">
             </div>
+            <h4 class="mt-5 text-white font-weight-bolder">"Here you can create your account!"</h4>
+            <p class="text-white">Sooner register and enjoy the blog!</p>
           </div>
-
         </div>
       </div>
     </div>

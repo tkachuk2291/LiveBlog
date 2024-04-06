@@ -2,21 +2,21 @@ from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
 from blog.views import (
     PostDetailView,
+    PostListView,
     UserLoginView,
     UserPasswordResetView,
     UserPasswordChangeView,
     UserPasswordResetConfirmView,
-    logout_view,
-    register_view,
+    RegistrationView,
     UserProfileUpdateView,
     PostCreateView,
     UserPostsListView,
     PostDeleteView,
     PostUpdateView,
     SearchView,
-    like_post_view,
+    LikePostView,
+    logout_view,
     home_view,
-    PostListView,
 )
 
 urlpatterns = [
@@ -30,9 +30,11 @@ urlpatterns = [
         PostDeleteView.as_view(),
         name="post-delete",
     ),
-    path("post/create", PostCreateView.as_view(), name="post-create"),
+    path("post/create/", PostCreateView.as_view(), name="post-create"),
     path("post/<int:pk>/", PostDetailView.as_view(), name="post-detail"),
-    path("post-update/<int:pk>", PostUpdateView.as_view(), name="post-update"),
+    path(
+        "post-update/<int:pk>/", PostUpdateView.as_view(), name="post-update"
+    ),
     path("posts/", PostListView.as_view(), name="post-list"),
     path("accounts/login/", UserLoginView.as_view(), name="login"),
     path("accounts/logout/", logout_view, name="logout"),
@@ -41,7 +43,7 @@ urlpatterns = [
         UserPasswordChangeView.as_view(),
         name="password_change",
     ),
-    path("accounts/register/", register_view, name="register"),
+    path("accounts/register/", RegistrationView.as_view(), name="register"),
     path(
         "accounts/password-change-done/",
         auth_views.PasswordChangeDoneView.as_view(
@@ -71,18 +73,17 @@ urlpatterns = [
     path(
         "accounts/password -reset-complete/",
         auth_views.PasswordResetCompleteView.as_view(
-            template_name=
-            "blog-templates/accounts/password_reset_complete.html"
+            template_name="blog-templates/accounts/password_reset_complete.html"
         ),
         name="password_reset_complete",
     ),
     path(
-        "accounts/user-profile/<int:pk>",
+        "accounts/user-profile/<int:pk>/",
         UserProfileUpdateView.as_view(),
         name="user-profile",
     ),
     path("search_blogs/", SearchView.as_view(), name="search_blog"),
-    path("like/", like_post_view, name="like-post"),
+    path("like/", LikePostView.as_view(), name="like-post"),
 ]
 
 app_name = "blog"

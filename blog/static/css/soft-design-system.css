@@ -26651,16 +26651,15 @@ span.input-group-text {
 }
 
 .full-width-height-img-container {
-    display: flex; /* Разместить элементы рядом */
-    justify-content: flex-end; /* Выровнять элементы по центру */
-    align-items: center; /* Выровнять элементы по вертикали по центру */
-    height: 80%; /* Для сохранения полной высоты */
+    display: flex;
+
+
+
 }
 
 .full-width-height-img,
-.col-lg-6 { /* Применить стили и к картинке, и к блоку */
-    max-width: 100%; /* Задать ширину 50% */
-    height: auto; /* Сохранить соотношение сторон изображения и блока */
+.col-lg-6 {
+    max-width: 70%;
 }
 
 .full-width-height-img {
