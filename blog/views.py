@@ -1,4 +1,5 @@
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import (
     LoginView,
@@ -26,7 +27,7 @@ from blog.forms import (
 from blog.models import Post, User, Comment, Like
 from django.contrib.auth import views as auth_views
 
-
+@login_required
 def home_view(request):
     num_post = Post.objects.all().count()
     num_likes = Like.objects.all().count()
