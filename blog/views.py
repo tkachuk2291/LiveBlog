@@ -27,6 +27,7 @@ from blog.forms import (
 from blog.models import Post, User, Comment, Like
 from django.contrib.auth import views as auth_views
 
+
 @login_required
 def home_view(request):
     num_post = Post.objects.all().count()
