@@ -20,7 +20,7 @@ from blog.views import (
 )
 
 urlpatterns = [
-    path("", home_view, name="home-page"),
+    path("", home_view, name="home-page-main"),
     path("home/", home_view, name="home-page"),
     path(
         "accounts/user_posts/", UserPostsListView.as_view(), name="user-posts"
