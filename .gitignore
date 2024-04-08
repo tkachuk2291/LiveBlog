@@ -1,3 +1,4 @@
+migrations/
 */migrations/
 .DS_Store
 .flake8
