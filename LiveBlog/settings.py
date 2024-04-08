@@ -24,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 dotenv_file = os.path.join(BASE_DIR, ".env")
 if os.path.isfile(dotenv_file):
     dotenv.load_dotenv(dotenv_file)
-SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-jl(+joe6gf&3eo3mf10i=zq*3b(ryg1cfo8&w!r8d&5_0%-er@")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.ukr.net"
@@ -38,7 +38,7 @@ EMAIL_HOST_PASSWORD = "Or7yQhEVXsZ2zETa"
 DEFAULT_FROM_EMAIL = "tkacuk2291@ukr.net"
 DATE_INPUT_FORMATS = ["%d.%m.%Y", "%d-%m-%Y"]
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -139,4 +139,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_REDIRECT_URL = "/home/"
+LOGIN_REDIRECT_URL = "/"
