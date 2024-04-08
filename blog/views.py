@@ -1,5 +1,4 @@
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import (
     LoginView,
@@ -28,24 +27,26 @@ from blog.models import Post, User, Comment, Like
 from django.contrib.auth import views as auth_views
 
 
-@login_required
-def home_view(request):
-    num_post = Post.objects.all().count()
-    num_likes = Like.objects.all().count()
-    num_views = Post.objects.aggregate(
-        total_views=Sum("hit_count_generic__hits")
-    )["total_views"]
-    context = {
-        "num_post": num_post,
-        "num_likes": num_likes,
-        "num_views": num_views,
-    }
-    return render(request, "blog-templates/home/home.html", context)
+class HomeView(LoginRequiredMixin, View):
+    def get(self, request):
+        num_post = Post.objects.all().count()
+        num_likes = Like.objects.all().count()
+        print(num_likes)
+        num_views = Post.objects.aggregate(
+            total_views=Sum("hit_count_generic__hits")
+        )["total_views"]
+        context = {
+            "num_post": num_post,
+            "num_likes": num_likes,
+            "num_views": num_views,
+        }
+        return render(request, "blog-templates/home/home.html", context)
 
 
-def logout_view(request):
-    logout(request)
-    return redirect("blog:login")
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect("blog:login")
 
 
 class LikePostView(LoginRequiredMixin, View):
@@ -61,10 +62,7 @@ class LikePostView(LoginRequiredMixin, View):
 
         like, created = Like.objects.get_or_create(user=user, post_id=post_id)
         if not created:
-            if like.value == "🤍︎":
-                like.value = "❤️"
-            else:
-                like.value = "🤍️"
+            like.value = "❤️" if like.value == "🤍︎" else "🤍️"
         like.save()
 
         redirect_to = request.META.get("HTTP_REFERER", "blog:post-list")

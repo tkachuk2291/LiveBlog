@@ -15,13 +15,13 @@ from blog.views import (
     PostUpdateView,
     SearchView,
     LikePostView,
-    logout_view,
-    home_view,
+    LogoutView,
+    HomeView,
 )
 
 urlpatterns = [
-    path("", home_view, name="home-page-main"),
-    path("home/", home_view, name="home-page"),
+    path("", HomeView.as_view(), name="home-page-main"),
+    path("home/", HomeView.as_view(), name="home-page"),
     path(
         "accounts/user_posts/", UserPostsListView.as_view(), name="user-posts"
     ),
@@ -37,7 +37,7 @@ urlpatterns = [
     ),
     path("posts/", PostListView.as_view(), name="post-list"),
     path("accounts/login/", UserLoginView.as_view(), name="login"),
-    path("accounts/logout/", logout_view, name="logout"),
+    path("accounts/logout/", LogoutView.as_view(), name="logout"),
     path(
         "accounts/password-change/",
         UserPasswordChangeView.as_view(),
