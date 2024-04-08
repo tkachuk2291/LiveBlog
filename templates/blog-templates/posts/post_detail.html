@@ -1,0 +1,217 @@
+{% extends 'layouts/base_sections.html' %}
+{% load static %}
+
+{% block header %}
+  {% include 'includes/navigation.html' %}
+{% endblock header %}
+
+{% block content %}
+  {% load hitcount_tags %}
+  <section class="py-sm-7 py-5 position-relative">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 mx-auto">
+          <div class="row py-lg-7 py-5">
+            <div class="col-lg-3 col-md-5 position-relative my-auto">
+              {% if post.picture %}
+                <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                     src="{{ post_detail.picture.url }}" alt="image">
+              {% else %}
+                <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                     src="{% static 'img/photo_posts/post_default_images.jpeg' %}" alt="image">
+              {% endif %}
+            </div>
+            <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
+              <div class="d-flex justify-content-between align-items-center mb-2 text-center">
+                <h4 class="mb-0 text-center">{{ post_detail.title }}</h4>
+                <div class="d-block">
+                  <form class="d-flex" action="{% url "blog:like-post" %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="post_id" value="{{ post_detail.id }}">
+                    {% if user not in post_detail.liked.all %}
+                      <button value="🤍" type="submit"
+                              style=" background-color: transparent;border: none;cursor: pointer;">🤍️
+                      </button>
+                    {% else %}
+                      <button value="❤️" type="submit"
+                              style=" background-color: transparent;border: none;cursor: pointer;">❤️
+                      </button>
+                    {% endif %}
+                  </form>
+                </div>
+              </div>
+              <div class="row mb-4 d-flex">
+                <div class="col-auto d-flex">
+                  <span class="h6"> <b>{% get_hit_count for post_detail %}</b></span>
+                  <span><h5 class="ml-1">👁️</h5></span>
+                </div>
+                <div class="col-auto p-0">
+                  <form action="{% url "blog:like-post" %}" method="post">
+                    <input type="hidden" name="post_id" value="{{ post_detail.id }}">
+                  </form>
+                </div>
+                <div class="col-auto">
+                  <span class="h6"><b>{{ post_detail.liked.all.count }}️</b></span>
+                  <span>❤️‍🔥</span>
+                </div>
+                <div class="col-auto">
+                  <span class="h6">🗓 {{ post_detail.created_time }}</span>
+                  <span>📌</span>
+                </div>
+              </div>
+              <p class="text-lg mb-0">
+                {{ post_detail.content | truncatewords:4000 }} <br>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-3">
+    <div class="container">
+      <section class="py-lg-1">
+        <div class="container text-center mt-2 ">
+          <h3 class=" color-post-detail z-index-1 position-relative text">Share your views</h3>
+          <p class=" color-post-detail opacity-8 mb-0">Share your impressions about the article!</p>
+        </div>
+        {% for comment in page_obj %}
+          <div class="container">
+            <div class="row">
+              <div class="col-12 mx-auto">
+                <div class="row py-lg-7 py-5">
+                  <div class="col-lg-3 col-md-5 position-relative my-auto">
+                    {% if comment.user.avatar %}
+                      <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                           src="{{ comment.user.avatar.url }}" alt="image">
+                    {% else %}
+                      <img class="img border-radius-lg max-width-200 w-100 position-relative z-index-2"
+                           src="{% static 'img/users_photos_posts/default_user_logged_in.png' %}" alt="image">
+                    {% endif %}
+                  </div>
+                  <div class="col-lg-7 col-md-7 z-index-2 position-relative px-md-2 px-sm-5 mt-sm-0 mt-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h4 class="mb-0">{{ comment.user.username }}</h4>
+                      <div class="d-block">
+                        <button type="button" class="btn btn-sm btn-outline-info text-nowrap mb-0">Author profile
+                        </button>
+                      </div>
+                    </div>
+                    <div class="row mb-4">
+                      <div class="col-auto">
+                        <span class="h6">323</span>
+                        <span>Posts</span>
+                      </div>
+                      <div class="col-auto">
+                        <span class="h6">3.5k</span>
+                        <span>Followers</span>
+                      </div>
+                      <div class="col-auto">
+                        <span class="h6">{{ comment.created_time_comment }}</span>
+                        <span>Data posting</span>
+                      </div>
+                    </div>
+                    <p class="text-lg mb-0">
+                      {{ comment.content }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </section>
+    </div>
+
+    {% if not post_detail.post_comment.all %}
+      <div class="container" style="background: cadetblue; width: 50%;margin-top:2em;padding-bottom: 1em">
+        <hr>
+        <h3 style="color: white;text-align: center">Write first commentary!</h3>
+      </div>
+    {% endif %}
+    {% if page_obj %}
+      {% include 'includes/pagination.html' %}
+    {% endif %}
+  </section>
+
+  <div class="container py-4">
+    <div class="row">
+      <div class="col-lg-7 mx-auto d-flex justify-content-center flex-column">
+        <h3 class="text-center">Comments</h3>
+        <form role="form" action="" id="contact-form" method="post" autocomplete="off">
+          {% csrf_token %}
+          <div class="card-body">
+            <div class="row">
+              <div class="form-group mb-4 form-width">
+                <label>Your message</label>
+                <textarea name="content" class="form-control" id="message" rows="4"></textarea>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="form-check form-switch mb-4">
+                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked="">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">I agree to the <a
+                        href="javascript:;" class="text-dark"><u>Terms and Conditions</u></a>.</label>
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <button type="submit" class="btn bg-gradient-dark w-100">Send Message</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mt-6">
+    <div class="row align-items-center text-center">
+      <h3 class="mb-5">Check out more useful articles</h3>
+    </div>
+    <div class="row justify-content-center">
+      {% for post in posts|slice:":4" %}
+        <div class="col-lg-3 col-sm-6">
+          <div class="card card-plain card-blog">
+            <div class="card-image border-radius-lg position-relative">
+              <a href="{% url 'blog:post-detail' pk=post.pk %}">
+                <img class="w-100 border-radius-lg move-on-hover shadow" src="{{ post.picture.url }}"
+                     alt="{{ post.title }}">
+              </a>
+            </div>
+
+            <div class="card-body px-0">
+              <h5>
+                <a href="{% url 'blog:post-detail' pk=post.pk %}"
+                   class="text-dark font-weight-bold">{{ post_detail.title }}</a>
+              </h5>
+              <div class="row mb-4 d-flex">
+                <div class="col-auto d-flex text-center">
+                  <span class="h6 justify-content-center"> <b>{% get_hit_count for post_detail %}</b></span>
+                  <span><h5 class="ml-1">👁️</h5></span>
+                </div>
+                <div class="col-auto p-0">
+                  <form action="{% url "blog:like-post" %}" method="post">
+                    <input type="hidden" name="post_id" value="{{ post_detail.id }}">
+                  </form>
+                </div>
+                <div class="col-auto">
+                  <span class="h6"><b>{{ post_detail.liked.all.count }}️</b></span>
+                  <span>❤️‍🔥</span>
+                </div>
+                <div class="col-auto">
+                  <span class="h6">🗓 </span>
+                  <span><b>{{ post_detail.created_time }}📌</b></span>
+                </div>
+              </div>
+              <p>{{ post.content | truncatewords:30 }}</p>
+              <a href="{% url 'blog:post-detail' pk=post.pk %}" class="text-info icon-move-right">Read More <i
+                  class="fas fa-arrow-right text-sm"></i></a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock content %}
