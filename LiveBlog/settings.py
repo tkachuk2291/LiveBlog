@@ -39,7 +39,7 @@ EMAIL_HOST_PASSWORD = "Or7yQhEVXsZ2zETa"
 DEFAULT_FROM_EMAIL = "tkacuk2291@ukr.net"
 DATE_INPUT_FORMATS = ["%d.%m.%Y", "%d-%m-%Y"]
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1", "live-blog-31al.onrender.com"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
