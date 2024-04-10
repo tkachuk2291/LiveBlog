@@ -3,7 +3,8 @@
 A cozy blog where everyone can post their own post,
 as well as comment and like the posts of other users!
 ## Contributing
-[Live Blog deployed to Render](https://live-blog-31al.onrender.com)
+[Live Blog deployed to Render](https://github.com/tkachuk2291/LiveBlog)
+
 
 ## Installing / Getting started
 
