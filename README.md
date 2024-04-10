@@ -5,7 +5,9 @@ as well as comment and like the posts of other users!
 ## Contributing
 [Live Blog deployed to Render](https://live-blog-31al.onrender.com)
 
-
+Test User:
+Login: Author
+Password: Authortest2291
 
 ## Installing / Getting started
 
